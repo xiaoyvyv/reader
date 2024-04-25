@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ComicReader</string>
+    <string name="tab_bookshelf">书架</string>
+    <string name="tab_profile">我的</string>
+    <string name="tab_setting">设置</string>
+
+    <string name="bookshelf_count">x%d</string>
+</resources>
