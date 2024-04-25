@@ -6,31 +6,32 @@ set(MUPDF_EXTRA_CFLAGS "")
 set(MUPDF_EXTRA_LDFLAGS "")
 set(MUPDF_EXTRA_LDLIBS "")
 
-option(USE_TESSERACT "Enable Tesseract" ON)
-option(USE_LEPTONICA "Enable Leptonica" ON)
-
-include(CMakeLibrary.cmake)
+set(USE_TESSERACT ON)
+set(USE_LEPTONICA ON)
 
 # 设置 NEON 和 AVX 相关的选项
 if (${ANDROID_ABI} STREQUAL "arm64-v8a")
-    set(HAVE_NEON "yes")
+    set(HAVE_NEON ON)
 elseif (${ANDROID_ABI} STREQUAL "x86_64")
-    set(HAVE_AVX "yes")
-    set(HAVE_AVX2 "yes")
-    set(HAVE_FMA "yes")
-    set(HAVE_SSE4_1 "yes")
+    set(HAVE_AVX ON)
+    set(HAVE_AVX2 ON)
+    set(HAVE_FMA ON)
+    set(HAVE_SSE4_1 ON)
 endif ()
 
-message("LOG: ${USE_TESSERACT} ${USE_LEPTONICA}")
+message("Options: USE_TESSERACT -> ${USE_TESSERACT}")
+message("Options: USE_LEPTONICA -> ${USE_LEPTONICA}")
 
 # 设置 TESSERACT 和 LEPTONICA 相关的选项
-if(USE_TESSERACT)
-    message("USE_TESSERACT")
-    if(NOT USE_LEPTONICA)
-        message("USE_LEPTONICA")
-        set(USE_LEPTONICA "yes")
-    endif()
-endif()
+if (USE_TESSERACT)
+
+    # 开启 TESSERACT 情况下，强制开启 USE_LEPTONICA
+    if (NOT USE_LEPTONICA)
+        set(USE_LEPTONICA ON)
+    endif ()
+endif ()
+
+include(CMakeLibrary.cmake)
 
 # --- Build a local static library for core mupdf ---
 file(GLOB MU_PDF_CORE_SRC
