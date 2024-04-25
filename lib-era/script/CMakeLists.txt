@@ -6,6 +6,9 @@ set(MUPDF_EXTRA_CFLAGS "")
 set(MUPDF_EXTRA_LDFLAGS "")
 set(MUPDF_EXTRA_LDLIBS "")
 
+option(USE_TESSERACT "Enable Tesseract" ON)
+option(USE_LEPTONICA "Enable Leptonica" ON)
+
 include(CMakeLibrary.cmake)
 
 # 设置 NEON 和 AVX 相关的选项
@@ -18,14 +21,16 @@ elseif (${ANDROID_ABI} STREQUAL "x86_64")
     set(HAVE_SSE4_1 "yes")
 endif ()
 
-# 设置 TESSERACT 和 LEPTONICA 相关的选项
-if (USE_TESSERACT STREQUAL "yes")
-    if (NOT USE_LEPTONICA)
-        set(USE_LEPTONICA "yes")
-    endif ()
-endif ()
+message("LOG: ${USE_TESSERACT} ${USE_LEPTONICA}")
 
-message(${FREETYPE_SRC})
+# 设置 TESSERACT 和 LEPTONICA 相关的选项
+if(USE_TESSERACT)
+    message("USE_TESSERACT")
+    if(NOT USE_LEPTONICA)
+        message("USE_LEPTONICA")
+        set(USE_LEPTONICA "yes")
+    endif()
+endif()
 
 # --- Build a local static library for core mupdf ---
 file(GLOB MU_PDF_CORE_SRC
@@ -44,19 +49,7 @@ file(GLOB MU_PDF_CORE_SRC
 add_library(mupdf_core STATIC ${MU_PDF_CORE_SRC})
 
 # 设置 mupdf_core 静态库的 include 路径
-target_include_directories(mupdf_core PRIVATE
-        ${MUPDF_PATH}/include
-)
-
-target_compile_options(mupdf_core PRIVATE
-        -ffunction-sections -fdata-sections
-        -D_FILE_OFFSET_BITS=32
-        -DTOFU_NOTO
-        -DTOFU_CJK
-        -DTOFU_SIL
-        -DAA_BITS=8
-)
-
+target_include_directories(mupdf_core PRIVATE ${MUPDF_PATH}/include)
 target_include_directories(mupdf_core PRIVATE ${FREETYPE_INCLUDE})
 target_include_directories(mupdf_core PRIVATE ${GUMBO_INCLUDE})
 target_include_directories(mupdf_core PRIVATE ${HARFBUZZ_INCLUDE})
@@ -77,11 +70,20 @@ if (USE_LEPTONICA)
     target_include_directories(mupdf_core PRIVATE ${LEPTONICA_INCLUDE})
 endif ()
 
+# mupdf_core defines
+target_compile_definitions(mupdf_core PRIVATE _FILE_OFFSET_BITS=32)
+target_compile_definitions(mupdf_core PRIVATE TOFU_NOTO)
+target_compile_definitions(mupdf_core PRIVATE TOFU_CJK)
+target_compile_definitions(mupdf_core PRIVATE TOFU_SIL)
+target_compile_definitions(mupdf_core PRIVATE AA_BITS=8)
 target_compile_definitions(mupdf_core PRIVATE HAVE_LCMS2MT)
 target_compile_definitions(mupdf_core PRIVATE OPJ_STATIC)
 target_compile_definitions(mupdf_core PRIVATE OPJ_HAVE_INTTYPES_H)
 target_compile_definitions(mupdf_core PRIVATE OPJ_HAVE_STDINT_H)
 
+# mupdf_core options
+target_compile_options(mupdf_core PRIVATE -ffunction-sections)
+target_compile_options(mupdf_core PRIVATE -fdata-sections)
 target_compile_options(mupdf_core PRIVATE ${FREETYPE_BUILD_CFLAGS})
 target_compile_options(mupdf_core PRIVATE ${GUMBO_BUILD_CFLAGS})
 target_compile_options(mupdf_core PRIVATE ${HARFBUZZ_BUILD_CFLAGS})
@@ -160,15 +162,17 @@ target_compile_options(mupdf_thirdparty_extract PRIVATE ${MUPDF_EXTRA_CFLAGS})
 # Tesseract
 if (USE_TESSERACT)
     add_library(mupdf_thirdparty_tesseract STATIC ${TESSERACT_SRC} ${MUPDF_PATH}/source/fitz/tessocr.cpp)
+    target_include_directories(mupdf_thirdparty_tesseract PRIVATE ${MUPDF_PATH}/include)
     target_include_directories(mupdf_thirdparty_tesseract PRIVATE ${TESSERACT_INCLUDE})
     target_compile_definitions(mupdf_thirdparty_tesseract PRIVATE ${TESSERACT_DEFINES})
     target_compile_options(mupdf_thirdparty_tesseract PRIVATE ${TESSERACT_BUILD_CFLAGS} -Wno-sign-compare ${MUPDF_EXTRA_CFLAGS})
-    target_compile_features(mupdf_thirdparty_tesseract PRIVATE exceptions)
+    target_compile_options(mupdf_thirdparty_tesseract PRIVATE -fexceptions)
 endif ()
 
 # Leptonica
 if (USE_LEPTONICA)
     add_library(mupdf_thirdparty_leptonica STATIC ${LEPTONICA_SRC} ${MUPDF_PATH}/source/fitz/tessocr.cpp)
+    target_include_directories(mupdf_thirdparty_leptonica PRIVATE ${MUPDF_PATH}/include)
     target_include_directories(mupdf_thirdparty_leptonica PRIVATE ${LEPTONICA_INCLUDE})
     target_compile_definitions(mupdf_thirdparty_leptonica PRIVATE ${LEPTONICA_DEFINES} ANDROID_BUILD)
     target_compile_options(mupdf_thirdparty_leptonica PRIVATE ${LEPTONICA_BUILD_CFLAGS} -Wno-sign-compare ${MUPDF_EXTRA_CFLAGS})

@@ -750,7 +750,8 @@ if (HAVE_FMA)
 endif ()
 
 if (HAVE_SSE4_1)
-    list(APPEND TESSERACT_DEFINES HAVE_SSE4_1 __SSE4_1__)
+    list(APPEND TESSERACT_DEFINES HAVE_SSE4_1)
+    list(APPEND TESSERACT_DEFINES __SSE4_1__)
     list(APPEND TESSERACT_BUILD_CFLAGS "-msse4.1")
     list(APPEND TESSERACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tesseract/src/arch/dotproductsse.cpp")
     list(APPEND TESSERACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tesseract/src/arch/intsimdmatrixsse.cpp")
@@ -758,7 +759,6 @@ endif ()
 
 if (HAVE_NEON)
     list(APPEND TESSERACT_DEFINES HAVE_NEON)
-    # list(APPEND TESSERACT_BUILD_CFLAGS ${NEONFLAGS})
 endif ()
 
 # Always include the neon code - it will compile to nothing if
@@ -766,8 +766,6 @@ endif ()
 # will be used if __aarch64__ is defined, which implies the
 # presence of NEON even without the HAVE_NEON flags.
 list(APPEND TESSERACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tesseract/src/arch/intsimdmatrixneon.cpp")
-
-list(APPEND TESSERACT_BUILD_CFLAGS ${TESSERACT_DEFINES})
 
 # --- EXTRACT ---
 
@@ -794,5 +792,3 @@ list(APPEND EXTRACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/extract/src/sys.
 list(APPEND EXTRACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/extract/src/text.c")
 list(APPEND EXTRACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/extract/src/xml.c")
 list(APPEND EXTRACT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/extract/src/zip.c")
-
-

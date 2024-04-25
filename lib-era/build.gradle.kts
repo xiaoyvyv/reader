@@ -36,6 +36,7 @@ android {
 
     sourceSets {
         named("main") {
+            // libmupdf-1.24.1 需要和 clone-mupdf.sh 下载的目标目录文件夹名保持一致
             java.srcDirs("src/main/cpp/libmupdf-1.24.1/platform/java/src")
         }
     }

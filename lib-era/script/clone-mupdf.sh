@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 代理，可选（可以加快克隆速度）
-export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+# export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
 # 这里 TAG 不一样，克隆下来的源码根目录猴后缀也不一样。
 # 在 CmakeLists.txt 配置 MuPDF 编译时，需要注意改下文件夹名称的版本号
