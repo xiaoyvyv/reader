@@ -1,5 +1,6 @@
 package com.xiaoyv.comic.reader
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,9 +21,15 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -34,16 +41,22 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
-import com.xiaoyv.comic.reader.config.ann.ContentType
-import com.xiaoyv.comic.reader.config.ann.NavigationType
-import com.xiaoyv.comic.reader.navigation.ComicBottomNavigationBar
+import com.xiaoyv.comic.reader.config.types.ContentType
+import com.xiaoyv.comic.reader.config.types.NavigationType
+import com.xiaoyv.comic.reader.navigation.ComicNavAction
 import com.xiaoyv.comic.reader.navigation.ComicNavigationActions
 import com.xiaoyv.comic.reader.navigation.ComicNavigationRail
 import com.xiaoyv.comic.reader.navigation.ComicRoute
 import com.xiaoyv.comic.reader.navigation.ComicTopLevelDestination
+import com.xiaoyv.comic.reader.navigation.MotionConstants
 import com.xiaoyv.comic.reader.navigation.TOP_LEVEL_DESTINATIONS
-import com.xiaoyv.comic.reader.ui.page.bookshelf.BookShelfRoute
+import com.xiaoyv.comic.reader.navigation.materialSharedAxisXIn
+import com.xiaoyv.comic.reader.navigation.materialSharedAxisXOut
+import com.xiaoyv.comic.reader.navigation.rememberSlideDistance
+import com.xiaoyv.comic.reader.ui.screen.feature.reader.ReaderScreen
+import com.xiaoyv.comic.reader.ui.screen.main.MainScreen
 import com.xiaoyv.comic.reader.ui.utils.DevicePosture
+import com.xiaoyv.comic.reader.ui.utils.debugLog
 import com.xiaoyv.comic.reader.ui.utils.isBookPosture
 import com.xiaoyv.comic.reader.ui.utils.isSeparating
 import kotlinx.coroutines.launch
@@ -116,8 +129,7 @@ fun MainPage(
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val selectedDestination =
-        navBackStackEntry?.destination?.route ?: ComicRoute.ROUTE_BOOKSHELF
+    val selectedDestination = navBackStackEntry?.destination?.route ?: ComicRoute.ROUTE_MAIN
 
     // 抽屉适配
     if (navigationType == NavigationType.TYPE_PERMANENT_NAVIGATION_DRAWER) {
@@ -230,7 +242,7 @@ fun MainActivityPageContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.inverseOnSurface)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             MainActivityPageNavHost(
                 navController = navController,
@@ -238,17 +250,12 @@ fun MainActivityPageContent(
                 navigationType = navigationType,
                 modifier = Modifier.weight(1f),
             )
-            AnimatedVisibility(visible = navigationType == NavigationType.TYPE_BOTTOM_NAVIGATION) {
-                ComicBottomNavigationBar(
-                    selectedDestination = selectedDestination,
-                    navigateToTopLevelDestination = navigateToTopLevelDestination
-                )
-            }
         }
     }
 }
 
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun MainActivityPageNavHost(
     modifier: Modifier = Modifier,
@@ -258,25 +265,60 @@ fun MainActivityPageNavHost(
 //    closeDetailScreen: () -> Unit,
 //    navigateToDetail: (Long, ReplyContentType) -> Unit,
 ) {
+
+    // 记录导航的事件行为
+    var backStackCount by remember { mutableIntStateOf(0) }
+    var lastAction by remember { mutableStateOf(ComicNavAction.PUSH) }
+    val currentBackStack by navController.currentBackStack.collectAsState()
+
+    // 根据回退堆栈数目判断
+    LaunchedEffect(navController) {
+        snapshotFlow { currentBackStack.size }.collect {
+            lastAction = when {
+                it > backStackCount -> ComicNavAction.PUSH
+                it < backStackCount -> ComicNavAction.POP
+                else -> ComicNavAction.REPLACE
+            }
+            backStackCount = it
+        }
+    }
+
+    val slideDistance = rememberSlideDistance()
+
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = ComicRoute.ROUTE_BOOKSHELF,
-    ) {
-        // 书架
-        composable(ComicRoute.ROUTE_BOOKSHELF) {
-            BookShelfRoute(
-                navigationType = navigationType,
-                onNavUp = navController::navigateUp
+        startDestination = ComicRoute.ROUTE_MAIN,
+        enterTransition = {
+            materialSharedAxisXIn(
+                forward = lastAction != ComicNavAction.POP,
+                slideDistance = slideDistance,
+                durationMillis = MotionConstants.DefaultMotionDuration,
+            )
+        },
+        exitTransition = {
+            materialSharedAxisXOut(
+                forward = lastAction != ComicNavAction.POP,
+                slideDistance = slideDistance,
+                durationMillis = MotionConstants.DefaultMotionDuration,
             )
         }
-        // 个人中心
-        composable(ComicRoute.ROUTE_PROFILE) {
-            Text(text = "你好")
+    ) {
+        // 主页
+        composable(ComicRoute.ROUTE_MAIN) {
+            MainScreen(
+                navigationType = navigationType,
+                onNavUp = navController::navigateUp,
+                onNavTo = navController::navigate,
+            )
         }
-        // 设置
-        composable(ComicRoute.ROUTE_SETTING) {
-            Text(text = "你好")
+
+        // 阅读页
+        composable(ComicRoute.ROUTE_READER) {
+            ReaderScreen(
+                onNavUp = navController::navigateUp,
+                onNavTo = navController::navigate,
+            )
         }
     }
 }

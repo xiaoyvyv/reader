@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ComicReader</string>
+    <string name="app_name">超漫阅读器</string>
     <string name="tab_bookshelf">书架</string>
     <string name="tab_profile">我的</string>
     <string name="tab_setting">设置</string>
 
     <string name="bookshelf_count">x%d</string>
+    <string name="bookshelf_mine">您的图书</string>
+    <string name="bookshelf_store">书架</string>
+    <string name="bookshelf_file">文件</string>
+
+    <string name="common_action_retry">重试</string>
+
+    <string name="error_something_goes_wrong">出了点问题，请稍后再试</string>
+    <string name="error_title">出错了</string>
+
+    <string name="empty_title">空空如也</string>
+    <string name="empty_subtitle">这里没有任何内容呢</string>
 </resources>

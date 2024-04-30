@@ -1,11 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":lib-era")
-
-
-include(":lib-i18n")
-
-
 pluginManagement {
     repositories {
         google {
@@ -29,5 +23,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ComicReader"
+
 include(":app")
 include(":lib-datasource")
+include(":lib-i18n")
+

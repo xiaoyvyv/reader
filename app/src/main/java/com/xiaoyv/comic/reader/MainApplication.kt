@@ -2,6 +2,8 @@ package com.xiaoyv.comic.reader
 
 import android.app.Application
 
+lateinit var application: Application
+
 /**
  * Class: [MainApplication]
  *
@@ -11,6 +13,6 @@ import android.app.Application
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-
+        application = this
     }
 }

@@ -1,19 +1,3 @@
-/*
- * Copyright 2022 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xiaoyv.comic.reader.navigation
 
 import androidx.compose.material.icons.Icons
@@ -24,12 +8,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.xiaoyv.comic.i18n.RS
-import com.xiaoyv.comic.reader.R
 
 object ComicRoute {
-    const val ROUTE_BOOKSHELF = "Bookshelf"
-    const val ROUTE_PROFILE = "Profile"
-    const val ROUTE_SETTING = "Setting"
+    const val ROUTE_TAB_HOME = "Home"
+    const val ROUTE_TAB_PROFILE = "Profile"
+    const val ROUTE_TAB_SETTING = "Setting"
+
+    const val ROUTE_MAIN = "Main"
+    const val ROUTE_READER = "Reader"
+
+    val homeTabs = listOf(ROUTE_TAB_HOME, ROUTE_TAB_PROFILE, ROUTE_TAB_SETTING)
 }
 
 data class ComicTopLevelDestination(
@@ -38,6 +26,12 @@ data class ComicTopLevelDestination(
     val unselectedIcon: ImageVector,
     val iconTextId: Int
 )
+
+enum class ComicNavAction {
+    PUSH,
+    POP,
+    REPLACE,
+}
 
 class ComicNavigationActions(private val navController: NavHostController) {
 
@@ -60,19 +54,19 @@ class ComicNavigationActions(private val navController: NavHostController) {
 
 val TOP_LEVEL_DESTINATIONS = listOf(
     ComicTopLevelDestination(
-        route = ComicRoute.ROUTE_BOOKSHELF,
+        route = ComicRoute.ROUTE_TAB_HOME,
         selectedIcon = Icons.Default.Home,
         unselectedIcon = Icons.Default.Home,
         iconTextId = RS.tab_bookshelf
     ),
     ComicTopLevelDestination(
-        route = ComicRoute.ROUTE_SETTING,
+        route = ComicRoute.ROUTE_TAB_SETTING,
         selectedIcon = Icons.Default.Settings,
         unselectedIcon = Icons.Default.Settings,
         iconTextId = RS.tab_setting
     ),
     ComicTopLevelDestination(
-        route = ComicRoute.ROUTE_PROFILE,
+        route = ComicRoute.ROUTE_TAB_PROFILE,
         selectedIcon = Icons.Default.AccountCircle,
         unselectedIcon = Icons.Default.AccountCircle,
         iconTextId = RS.tab_profile
