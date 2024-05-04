@@ -4,6 +4,8 @@ package com.xiaoyv.comic.reader.ui.component
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +35,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
+
 @Composable
 fun LazyList(
     modifier: Modifier = Modifier,
@@ -45,6 +48,21 @@ fun LazyList(
     onLastVisibleIndexChanged: suspend (Int) -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
+
+    LazyListWrap(
+        modifier = modifier,
+        state = state,
+        contentPadding = contentPadding,
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start,
+        isVertical = false,
+        flingBehavior = ScrollableDefaults.flingBehavior(),
+        reverseLayout = false,
+        userScrollEnabled = true,
+        beyondBoundsItemCount = 2,
+        content = content
+    )
+
     val isFirstItemVisible by remember { derivedStateOf { state.isFirstItemVisible() } }
     LaunchedEffect(isFirstItemVisible) {
         if (isFirstItemVisible) {

@@ -2,7 +2,6 @@
 
 package com.xiaoyv.comic.reader.ui.screen.main.home
 
-import android.app.Application
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -36,26 +34,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.xiaoyv.comic.i18n.RS
+import com.xiaoyv.comic.reader.config.types.NavigationType
+import com.xiaoyv.comic.reader.data.entity.FileEntity
+import com.xiaoyv.comic.reader.ui.component.ComicAppBar
 import com.xiaoyv.comic.reader.ui.component.Page
-import com.xiaoyv.comic.reader.ui.screen.main.home.book.BookListScreen
+import com.xiaoyv.comic.reader.ui.screen.main.home.book.BookListRoute
 import com.xiaoyv.comic.reader.ui.screen.main.home.bookshelf.BookShelfScreen
-import com.xiaoyv.comic.reader.ui.screen.main.home.file.BookFileScreen
+import com.xiaoyv.comic.reader.ui.screen.main.home.file.BookFileRoute
 import com.xiaoyv.comic.reader.ui.utils.copy
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTabScreen(
-    viewModel: HomeTabViewModel,
-    onNavUp: () -> Unit,
-    onNavTo: (String) -> Unit
+fun HomeTabRoute(
+    @NavigationType navigationType: Int,
+    onBookFileClick: (FileEntity) -> Unit
 ) {
+    val viewModel = viewModel<HomeTabViewModel>()
 
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
@@ -63,6 +62,16 @@ fun HomeTabScreen(
         }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    HomeTabScreen(
+        onBookFileClick = onBookFileClick
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTabScreen(
+    onBookFileClick: (FileEntity) -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val scope = rememberCoroutineScope()
 
@@ -74,14 +83,9 @@ fun HomeTabScreen(
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(id = RS.app_name),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    },
+                ComicAppBar(
+                    title = stringResource(id = RS.app_name),
+                    hideNavigationIcon = true,
                     actions = {
                         IconButton(onClick = { }) {
                             Icon(
@@ -104,18 +108,18 @@ fun HomeTabScreen(
                         listOf(
                             Page(
                                 labelResId = RS.bookshelf_mine,
-                                content = { BookListScreen(onNavTo) }
+                                content = { BookListRoute() }
                             ),
                             Page(
                                 labelResId = RS.bookshelf_store,
-                                content = { BookShelfScreen(onNavTo) }
+                                content = { BookShelfScreen() }
                             ),
                             Page(
                                 labelResId = RS.bookshelf_file,
                                 content = {
-                                    BookFileScreen(
+                                    BookFileRoute(
                                         curentPage = pagerState.currentPage,
-                                        onNavTo = onNavTo
+                                        onBookFileClick = onBookFileClick
                                     )
                                 }
                             ),
@@ -162,11 +166,4 @@ fun HomeTabScreen(
             }
         )
     }
-}
-
-@Preview
-@Composable
-fun Preview() {
-
-    HomeTabScreen(viewModel = HomeTabViewModel(Application()), onNavUp = {}, onNavTo = {})
 }

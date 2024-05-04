@@ -30,4 +30,5 @@ object MobiExtractor {
      * @param outPath 输出文件路径前缀，实际路径会拼接 `_cover.jpg`
      */
     external fun extractCover(mobiPath: String, outPath: String): Int
+
 }

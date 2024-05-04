@@ -12,8 +12,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.xiaoyv.comic.reader.ui.component.LocalPopupHostState
+import com.xiaoyv.comic.reader.ui.component.PopupHostScreen
+import com.xiaoyv.comic.reader.ui.component.rememberPopupHostState
 import com.xiaoyv.comic.reader.ui.theme.ComicReaderTheme
 import com.xiaoyv.comic.reader.ui.utils.debugLog
 
@@ -37,11 +44,22 @@ class MainActivity : ComponentActivity() {
             ComicReaderTheme {
                 val windowSize = calculateWindowSizeClass(this)
                 val displayFeatures = calculateDisplayFeatures(this)
+                val popupHostState = rememberPopupHostState()
 
-                MainPage(
-                    windowSize = windowSize,
-                    displayFeatures = displayFeatures,
-                )
+                CompositionLocalProvider(LocalPopupHostState provides popupHostState) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        MainPage(
+                            windowSize = windowSize,
+                            displayFeatures = displayFeatures,
+                        )
+
+                        PopupHostScreen(
+                            visible = popupHostState.visible,
+                            onDismissRequest = popupHostState::hide,
+                            content = popupHostState.content,
+                        )
+                    }
+                }
             }
         }
 

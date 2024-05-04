@@ -3,11 +3,14 @@ package com.xiaoyv.comic.datasource.impl.djvu
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.annotation.Keep
-import com.xiaoyv.comic.datasource.impl.BookDataSource
+import com.xiaoyv.comic.datasource.BookDataSource
+import com.xiaoyv.comic.datasource.BookMetaData
+import com.xiaoyv.comic.datasource.BookPage
+import com.xiaoyv.comic.datasource.FileBookModel
 import com.xiaoyv.comic.datasource.jni.NativeContext
+import com.xiaoyv.comic.datasource.utils.TempHolder
 import com.xiaoyv.comic.datasource.utils.createDir
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import com.xiaoyv.comic.datasource.utils.lastModifiedText
 import java.io.File
 import java.io.FileOutputStream
 
@@ -18,9 +21,12 @@ import java.io.FileOutputStream
  * @since 4/30/24
  */
 @Keep
-class DjvuBookDataSource(override val context: Context, override val file: File) : BookDataSource {
-    private var contextHandle: Long = 0
-    private var docHandle: Long = 0
+class DjvuBookDataSource(
+    override val context: Context,
+    override val model: FileBookModel
+) : BookDataSource<FileBookModel> {
+    internal var contextHandle: Long = 0
+    internal var docHandle: Long = 0
 
     /**
      * DJVU Render Mode
@@ -32,9 +38,11 @@ class DjvuBookDataSource(override val context: Context, override val file: File)
      * - 4 backgroud,
      * - 5 foreground
      */
-    private var renderMode = 0
+    internal var renderMode = 0
 
-    private val saveDir by lazy { createDataDir() }
+    override var pageCount: Int = 0
+
+    internal val saveDir by lazy { createDataDir() }
 
     @Synchronized
     private external fun create(): Long
@@ -43,62 +51,62 @@ class DjvuBookDataSource(override val context: Context, override val file: File)
     private external fun free(contextHandle: Long)
 
     override fun load() {
-        contextHandle = create()
-        docHandle = DjvuBookDocument.open(contextHandle, file.absolutePath)
+        TempHolder.lock.lock()
+        try {
+            contextHandle = create()
+            docHandle = DjvuBookDocument.open(contextHandle, model.file.absolutePath)
+            require(docHandle != 0L)
+            pageCount = DjvuBookDocument.getPageCount(docHandle)
+        } finally {
+            TempHolder.lock.unlock()
+        }
     }
 
     override fun getCover(): String {
-        require(getPageCount() > 0) { "No content" }
-        val pageHandle = DjvuBookDocument.getPage(docHandle, 1)
+        val coverDir = createDir(saveDir.absolutePath + "/cover")
+        val coverFileName = "${model.file.nameWithoutExtension}.png"
+        val coverFilePath = coverDir.absolutePath + "/" + coverFileName
 
-        require(pageHandle != 0L) { "Page read fail!" }
-
-        var width = 0
-        var height = 0
-        var count = 0
-        while ((width == 0 || height == 0) && count < 5) {
-            width = DjvuBookPage.getWidth(pageHandle)
-            height = DjvuBookPage.getHeight(pageHandle)
-            count++
-            runBlocking { delay(50) }
+        // 缓存数据
+        if (File(coverFilePath).let { it.isFile && it.exists() }) {
+            return coverFilePath
         }
 
-        require(width > 0 && height > 0) { "Page size error! [w=$width, h=$height]" }
-
-        // 注意这里  Bitmap.Config.RGB_565
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-        val result = DjvuBookPage.renderPageBitmap(
-            pageHandle = pageHandle,
-            contextHandle = contextHandle,
-            targetWidth = width,
-            targetHeight = height,
-            pageSliceX = 0,
-            pageSliceY = 0,
-            pageSliceWidth = width,
-            pageSliceHeight = height,
-            bitmap = bitmap,
-            renderMode = renderMode
-        )
-
-        require(result) { "Render cover error" }
-
-        val coverDir = createDir(saveDir.absolutePath + "/cover")
-        val coverFileName = "$fileNameWithoutExtension.png"
-        val coverFilePath = coverDir.absolutePath + "/" + coverFileName
+        val bitmap = getPage(1).initPageMeta().renderPage()
 
         FileOutputStream(coverFilePath).use { out ->
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             bitmap.recycle()
         }
 
-        DjvuBookPage.free(pageHandle)
-
         return coverFilePath
     }
 
-    override fun getPageCount(): Int {
-        require(contextHandle != 0L && docHandle != 0L) { "Djvu open fail!" }
-        return DjvuBookDocument.getPageCount(docHandle)
+    override fun getPage(page: Int): BookPage<FileBookModel,DjvuBookDataSource> {
+        return DjvuBookPage(this, page)
+    }
+
+    override fun getMetaInfo(): BookMetaData {
+        require(docHandle != 0L)
+
+        val metaInfos = DjvuBookDocument.getMetaKeys(docHandle)
+            .orEmpty()
+            .split(",")
+            .filter { it.isNotEmpty() }
+            .map { it to DjvuBookDocument.getMeta(docHandle, it) }
+
+        val subject = metaInfos.joinToString("\n") { it.first + ":" + it.second.orEmpty() }
+
+        return BookMetaData(
+            title = model.file.nameWithoutExtension,
+            subject = subject.ifBlank { model.file.absolutePath },
+            author = "未知",
+            format = model.file.extension.uppercase(),
+            creator = "未知",
+            producer = "",
+            creationDate = model.file.lastModifiedText(),
+            modDate = model.file.lastModifiedText()
+        )
     }
 
     override fun supportExtension(): List<String> {
@@ -106,11 +114,20 @@ class DjvuBookDataSource(override val context: Context, override val file: File)
     }
 
     override fun destroy() {
-        DjvuBookDocument.free(docHandle)
-        docHandle = 0
+        TempHolder.lock.lock()
+        try {
+            if (docHandle != 0L) {
+                docHandle = 0
+                DjvuBookDocument.free(docHandle)
+            }
 
-        free(contextHandle)
-        contextHandle = 0
+            if (contextHandle != 0L) {
+                free(contextHandle)
+                contextHandle = 0
+            }
+        } finally {
+            TempHolder.lock.unlock()
+        }
     }
 
     companion object {

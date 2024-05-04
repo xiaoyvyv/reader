@@ -471,7 +471,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getMetaKeys(JNIEnv *
 
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageLinks(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageLinks(JNIEnv *env, jclass cls,
                                                                      jlong docHandle,
                                                                      jint pageNumber) {
     DEBUG_PRINT("getPageLinks num: %d", pageNumber);
@@ -479,7 +479,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageLinks(JNIEnv *env
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageText(JNIEnv *jenv, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageText(JNIEnv *jenv, jclass cls,
                                                                     jlong docHandle,
                                                                     jint pageNumber,
                                                                     jlong contextHandle,
@@ -520,19 +520,19 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_isDecodingDone(JNIEnv *e
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getWidth(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getWidth(JNIEnv *env, jclass cls,
                                                                  jlong pageHangle) {
     return ddjvu_page_get_width((ddjvu_page_t *) pageHangle);
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getHeight(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getHeight(JNIEnv *env, jclass cls,
                                                                   jlong pageHangle) {
     return ddjvu_page_get_height((ddjvu_page_t *) pageHangle);
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPage(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPage(JNIEnv *env, jclass cls,
                                                                    jlong pageHangle,
                                                                    jlong contextHandle,
                                                                    jint targetWidth,
@@ -582,7 +582,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPage(JNIEnv *env, 
 /*JNI BITMAP API*/
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPageBitmap(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPageBitmap(JNIEnv *env, jclass cls,
                                                                          jlong pageHangle,
                                                                          jlong contextHandle,
                                                                          jint targetWidth,
@@ -652,7 +652,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPageBitmap(JNIEnv 
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_free(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_free(JNIEnv *env, jclass cls,
                                                              jlong pageHangle) {
     ddjvu_page_release((ddjvu_page_t *) pageHangle);
 }

@@ -65,9 +65,7 @@ fun Placeholder(
 fun Loading(
     modifier: Modifier = Modifier,
 ) = Box(
-    modifier = modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background),
+    modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
     content = { CircularProgressIndicator() },
 )

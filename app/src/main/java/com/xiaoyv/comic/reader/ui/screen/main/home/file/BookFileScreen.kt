@@ -1,6 +1,5 @@
 package com.xiaoyv.comic.reader.ui.screen.main.home.file
 
-import android.app.Application
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -15,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -27,10 +27,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumptech.glide.integration.compose.GlideImage
 import com.xiaoyv.comic.reader.data.entity.FileEntity
-import com.xiaoyv.comic.reader.navigation.ComicRoute
 import com.xiaoyv.comic.reader.ui.component.LazyList
+import com.xiaoyv.comic.reader.ui.component.LocalPopupHostState
+import com.xiaoyv.comic.reader.ui.component.LocalSnackbarHostState
 import com.xiaoyv.comic.reader.ui.component.PageStateScreen
 import com.xiaoyv.comic.reader.ui.utils.iconVector
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -40,9 +42,9 @@ import java.io.File
  * @since 4/26/24
  */
 @Composable
-fun BookFileScreen(
+fun BookFileRoute(
     curentPage: Int,
-    onNavTo: (String) -> Unit
+    onBookFileClick: (FileEntity) -> Unit
 ) {
     val viewModel = viewModel<BookFileViewModel>()
     val fileState by viewModel.fileState.collectAsStateWithLifecycle()
@@ -54,17 +56,17 @@ fun BookFileScreen(
     }
 
     BookFileScreen(
-        viewModel = viewModel,
         fileState = fileState,
-        onNavTo = onNavTo
+        onEnterDir = viewModel::navTo,
+        onBookFileClick = onBookFileClick
     )
 }
 
 @Composable
 fun BookFileScreen(
-    viewModel: BookFileViewModel,
     fileState: BookFileState,
-    onNavTo: (String) -> Unit
+    onEnterDir: (FileEntity) -> Unit,
+    onBookFileClick: (FileEntity) -> Unit
 ) {
     // 状态视图绑定
     PageStateScreen(
@@ -79,16 +81,16 @@ fun BookFileScreen(
                 val entity = fileState.files[it]
                 if (entity.isBook || entity.isImage) {
                     BookFileScreenBookItem(
-                        viewModel = viewModel,
                         fileEntity = entity,
                         index = it,
-                        onNavTo = onNavTo
+                        onEnterDir = onEnterDir,
+                        onBookFileClick = onBookFileClick
                     )
                 } else {
                     BookFileScreenNormalItem(
-                        viewModel = viewModel,
                         fileEntity = entity,
-                        index = it
+                        index = it,
+                        onEnterDir = onEnterDir
                     )
                 }
             }
@@ -98,16 +100,28 @@ fun BookFileScreen(
 
 @Composable
 fun BookFileScreenNormalItem(
-    viewModel: BookFileViewModel,
     fileEntity: FileEntity,
-    index: Int
+    index: Int,
+    onEnterDir: (FileEntity) -> Unit,
 ) {
+//    val popupHostState = LocalPopupHostState.current
+//    val hostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp, 8.dp),
         onClick = {
-            viewModel.navTo(fileEntity)
+            if (fileEntity.cdParent || fileEntity.file.isDirectory) {
+                onEnterDir(fileEntity)
+            } else {
+//                popupHostState.show {
+//                    Text(text = "你好")
+//                }
+                scope.launch {
+//                    hostState.showSnackbar("你好")
+                }
+            }
         }
     ) {
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
@@ -148,10 +162,10 @@ fun BookFileScreenNormalItem(
 
 @Composable
 fun BookFileScreenBookItem(
-    viewModel: BookFileViewModel,
     fileEntity: FileEntity,
     index: Int,
-    onNavTo: (String) -> Unit
+    onEnterDir: (FileEntity) -> Unit,
+    onBookFileClick: (FileEntity) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -159,9 +173,9 @@ fun BookFileScreenBookItem(
             .padding(16.dp, 8.dp),
         onClick = {
             if (fileEntity.cdParent || fileEntity.file.isDirectory) {
-                viewModel.navTo(fileEntity)
+                onEnterDir(fileEntity)
             } else {
-                onNavTo(ComicRoute.ROUTE_READER)
+                onBookFileClick(fileEntity)
             }
         }
     ) {
@@ -180,7 +194,7 @@ fun BookFileScreenBookItem(
             ) {
                 GlideImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = if (fileEntity.isImage) fileEntity.file else fileEntity,
+                    model = fileEntity.file.absolutePath,
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                 )
@@ -236,15 +250,15 @@ fun BookFileScreenBookItem(
 fun PreviewBookItem() {
     Column {
         BookFileScreenNormalItem(
-            viewModel = BookFileViewModel(Application()),
             fileEntity = FileEntity(file = File("你好、你、\nf非阿发阿发af\n asfasfa")),
-            index = 0
+            index = 0,
+            onEnterDir = {}
         )
         BookFileScreenBookItem(
-            viewModel = BookFileViewModel(Application()),
             fileEntity = FileEntity(file = File("你好")),
             index = 0,
-            onNavTo = {}
+            onEnterDir = {},
+            onBookFileClick = {}
         )
     }
 }

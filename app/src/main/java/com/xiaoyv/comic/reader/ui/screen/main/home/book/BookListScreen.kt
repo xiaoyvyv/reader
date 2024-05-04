@@ -39,18 +39,15 @@ import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
 import com.xiaoyv.comic.reader.ui.utils.isStoped
 
 /**
- * [BookListScreen]
+ * [BookListRoute]
  *
  * @author why
  * @since 4/26/24
  */
 @Composable
-fun BookListScreen(
-    onNavTo: (String) -> Unit
+fun BookListRoute(
 ) {
     val viewModel = viewModel<BookListViewModel>()
-//    val state by viewModel.state.collectAsStateWithLifecycle()
-
     val pagingItems = viewModel.bookList.collectAsLazyPagingItems()
 
     BookListScreen(
@@ -182,7 +179,7 @@ fun BookListScreenItem(
             ) {
                 GlideImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = entity?.uri,
+                    model = entity?.model,
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )

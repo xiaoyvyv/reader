@@ -53,10 +53,10 @@ import com.xiaoyv.comic.reader.navigation.TOP_LEVEL_DESTINATIONS
 import com.xiaoyv.comic.reader.navigation.materialSharedAxisXIn
 import com.xiaoyv.comic.reader.navigation.materialSharedAxisXOut
 import com.xiaoyv.comic.reader.navigation.rememberSlideDistance
-import com.xiaoyv.comic.reader.ui.screen.feature.reader.ReaderScreen
+import com.xiaoyv.comic.reader.ui.screen.feature.bookinfo.addBookInfoScreen
+import com.xiaoyv.comic.reader.ui.screen.feature.bookreader.addBookReaderScreen
 import com.xiaoyv.comic.reader.ui.screen.main.MainScreen
 import com.xiaoyv.comic.reader.ui.utils.DevicePosture
-import com.xiaoyv.comic.reader.ui.utils.debugLog
 import com.xiaoyv.comic.reader.ui.utils.isBookPosture
 import com.xiaoyv.comic.reader.ui.utils.isSeparating
 import kotlinx.coroutines.launch
@@ -304,21 +304,18 @@ fun MainActivityPageNavHost(
             )
         }
     ) {
-        // 主页
+        // TAB 主页
         composable(ComicRoute.ROUTE_MAIN) {
             MainScreen(
                 navigationType = navigationType,
-                onNavUp = navController::navigateUp,
-                onNavTo = navController::navigate,
+                navController = navController
             )
         }
 
-        // 阅读页
-        composable(ComicRoute.ROUTE_READER) {
-            ReaderScreen(
-                onNavUp = navController::navigateUp,
-                onNavTo = navController::navigate,
-            )
-        }
+        // 阅读页面
+        addBookReaderScreen(navController)
+
+        // 书籍详情页
+        addBookInfoScreen(navController)
     }
 }

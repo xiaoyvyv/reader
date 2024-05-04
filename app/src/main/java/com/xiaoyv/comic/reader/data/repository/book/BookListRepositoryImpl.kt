@@ -1,9 +1,11 @@
 package com.xiaoyv.comic.reader.data.repository.book
 
 import android.net.Uri
+import com.xiaoyv.comic.datasource.FileBookModel
 import com.xiaoyv.comic.reader.data.defaultPagingSource
 import com.xiaoyv.comic.reader.data.entity.BookEntity
 import kotlinx.coroutines.delay
+import java.io.File
 
 /**
  * [BookListRepositoryImpl]
@@ -15,19 +17,19 @@ class BookListRepositoryImpl : BookListRepository {
     private val random = listOf(
         BookEntity(
             name = "我推的孩子",
-            uri = Uri.parse("https://lain.bgm.tv/pic/cover/l/35/b2/303186_oE6Bo.jpg")
+            model = FileBookModel("")
         ),
         BookEntity(
             name = "迷宫饭",
-            uri = Uri.parse("https://lain.bgm.tv/pic/cover/l/3b/19/105206_7e2mV.jpg")
+            model = FileBookModel("")
         ),
         BookEntity(
             name = "一周一次买下同班同学的那些事",
-            uri = Uri.parse("https://lain.bgm.tv/pic/cover/l/0d/e8/370560_sgCDF.jpg")
+            model = FileBookModel("")
         ),
         BookEntity(
             name = "魔都精兵的奴隶",
-            uri = Uri.parse("https://lain.bgm.tv/pic/cover/l/8b/bf/271005_P1j2c.jpg")
+            model = FileBookModel("")
         )
     )
 

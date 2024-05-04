@@ -2,6 +2,7 @@ package com.xiaoyv.comic.reader.ui.utils
 
 import java.security.MessageDigest
 
+
 /**
  * [md5]
  *

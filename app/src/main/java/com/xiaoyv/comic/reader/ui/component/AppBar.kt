@@ -20,7 +20,14 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+
+
+@Composable
+fun EmptyNavigationIcon() {
+
+}
 
 /**
  * [ComicAppBar]
@@ -32,6 +39,7 @@ import androidx.compose.ui.unit.dp
 fun ComicAppBar(
     modifier: Modifier = Modifier,
     title: String,
+    hideNavigationIcon: Boolean = false,
     onNavigationIconClick: () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
@@ -41,10 +49,14 @@ fun ComicAppBar(
     ComicAppBar(
         modifier = modifier,
         title = {
-            Text(text = title, style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium
+            )
         },
         navigationIcon = {
-            IconButton(onClick = onNavigationIconClick) {
+            if (!hideNavigationIcon) IconButton(onClick = onNavigationIconClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = null

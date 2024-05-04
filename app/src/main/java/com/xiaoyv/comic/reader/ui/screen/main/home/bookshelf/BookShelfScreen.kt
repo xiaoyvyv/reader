@@ -14,7 +14,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
  */
 @Composable
 fun BookShelfScreen(
-    onNavTo: (String) -> Unit
 ) {
     BookShelfScreen(viewModel = viewModel())
 }

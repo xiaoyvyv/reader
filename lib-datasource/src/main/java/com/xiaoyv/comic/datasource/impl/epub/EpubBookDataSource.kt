@@ -1,7 +1,8 @@
 package com.xiaoyv.comic.datasource.impl.epub
 
 import android.content.Context
-import com.xiaoyv.comic.datasource.impl.BookDataSource
+import com.xiaoyv.comic.datasource.FileBookModel
+import com.xiaoyv.comic.datasource.impl.pdf.PdfBookDataSource
 import com.xiaoyv.comic.datasource.utils.createDir
 import org.jsoup.Jsoup
 import java.io.File
@@ -16,14 +17,13 @@ import java.util.zip.ZipFile
  */
 class EpubBookDataSource(
     override val context: Context,
-    override val file: File
-) : BookDataSource {
+    override val model: FileBookModel
+) : PdfBookDataSource(context, model) {
     private var zipFile: ZipFile? = null
 
-    private val saveDir by lazy { createDataDir() }
-
     override fun load() {
-        zipFile = ZipFile(file)
+        super.load()
+        zipFile = ZipFile(model.file)
     }
 
     override fun getCover(): String {

@@ -2,8 +2,9 @@
 <resources>
     <string name="app_name">超漫阅读器</string>
     <string name="tab_bookshelf">书架</string>
+    <string name="tab_local">本地</string>
+    <string name="tab_remote">远程</string>
     <string name="tab_profile">我的</string>
-    <string name="tab_setting">设置</string>
 
     <string name="bookshelf_count">x%d</string>
     <string name="bookshelf_mine">您的图书</string>

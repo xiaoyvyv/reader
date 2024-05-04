@@ -14,3 +14,9 @@ val LoadState.isStoped: Boolean
 val LoadState.isError: Boolean
     get() = this is LoadState.Error
 
+val LoadState.isNotLoading: Boolean
+    get() = this is LoadState.NotLoading
+
+val LoadState.isLoading: Boolean
+    get() = this is LoadState.Loading
+

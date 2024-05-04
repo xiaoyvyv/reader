@@ -1,6 +1,7 @@
 package com.xiaoyv.comic.reader
 
 import android.app.Application
+import com.xiaoyv.comic.datasource.remote.RemoteLibraryFactory
 
 lateinit var application: Application
 
@@ -14,5 +15,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         application = this
+
+        RemoteLibraryFactory.application = this
     }
 }

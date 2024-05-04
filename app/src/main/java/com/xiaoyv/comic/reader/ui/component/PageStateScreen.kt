@@ -61,7 +61,7 @@ fun <T : Any> PageStateScreen(
 @Composable
 fun PageStateScreen(
     loadState: LoadState,
-    itemCount: () -> Int = { 0 },
+    itemCount: () -> Int = { 1 },
     @StringRes emptyTitleRes: Int = RS.empty_title,
     @StringRes emptySubtitleRes: Int = RS.empty_subtitle,
     @DrawableRes emptyImageRes: Int = R.drawable.ill_bookmarks,

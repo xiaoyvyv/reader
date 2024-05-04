@@ -1,8 +1,9 @@
-package com.xiaoyv.comic.datasource.impl
+package com.xiaoyv.comic.datasource
 
 import android.content.Context
 import android.util.Log
 import com.xiaoyv.comic.datasource.utils.md5
+import java.io.Closeable
 import java.io.File
 
 /**
@@ -11,23 +12,23 @@ import java.io.File
  * @author why
  * @since 4/29/24
  */
-interface BookDataSource {
+interface BookDataSource<T : BookModel> : Closeable {
     val context: Context
-    val file: File
+    val model: T
 
     val fileName: String
-        get() = file.name.orEmpty().trim()
+        get() = model.fileName
 
-    val fileNameWithoutExtension: String
-        get() = file.nameWithoutExtension.trim()
+    var pageCount: Int
 
     fun load()
 
     @Throws(Exception::class)
     fun getCover(): String
 
-    @Throws(Exception::class)
-    fun getPageCount(): Int = 0
+    fun getPage(page: Int): BookPage<T, out BookDataSource<T>>
+
+    fun getMetaInfo(): BookMetaData
 
     /**
      * 支持的格式，不带点
@@ -37,7 +38,7 @@ interface BookDataSource {
     fun createDataDir(deleteAllInDir: Boolean = false): File {
         val extensions = supportExtension()
         val typeName = if (extensions.isEmpty()) "default" else extensions.joinToString("-")
-        val dir = context.cacheDir.absolutePath + "/source/$typeName/${file.absolutePath.md5()}"
+        val dir = context.cacheDir.absolutePath + "/source/$typeName/${model.key.md5()}"
         return File(dir).apply {
             if (exists() && deleteAllInDir) {
                 deleteRecursively()
@@ -49,6 +50,10 @@ interface BookDataSource {
     }
 
     fun destroy()
+
+    override fun close() {
+        destroy()
+    }
 
     fun log(message: () -> Any?) {
         Log.i(javaClass.simpleName, message().toString())

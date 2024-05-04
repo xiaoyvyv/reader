@@ -2,8 +2,11 @@ package com.xiaoyv.comic.reader.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.WifiTethering
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -11,13 +14,12 @@ import com.xiaoyv.comic.i18n.RS
 
 object ComicRoute {
     const val ROUTE_TAB_HOME = "Home"
+    const val ROUTE_TAB_LOCAL = "Local"
+    const val ROUTE_TAB_REMOTE = "Remote"
     const val ROUTE_TAB_PROFILE = "Profile"
-    const val ROUTE_TAB_SETTING = "Setting"
 
     const val ROUTE_MAIN = "Main"
     const val ROUTE_READER = "Reader"
-
-    val homeTabs = listOf(ROUTE_TAB_HOME, ROUTE_TAB_PROFILE, ROUTE_TAB_SETTING)
 }
 
 data class ComicTopLevelDestination(
@@ -55,15 +57,21 @@ class ComicNavigationActions(private val navController: NavHostController) {
 val TOP_LEVEL_DESTINATIONS = listOf(
     ComicTopLevelDestination(
         route = ComicRoute.ROUTE_TAB_HOME,
-        selectedIcon = Icons.Default.Home,
-        unselectedIcon = Icons.Default.Home,
+        selectedIcon = Icons.Default.Bookmarks,
+        unselectedIcon = Icons.Default.Bookmarks,
         iconTextId = RS.tab_bookshelf
     ),
     ComicTopLevelDestination(
-        route = ComicRoute.ROUTE_TAB_SETTING,
-        selectedIcon = Icons.Default.Settings,
-        unselectedIcon = Icons.Default.Settings,
-        iconTextId = RS.tab_setting
+        route = ComicRoute.ROUTE_TAB_LOCAL,
+        selectedIcon = Icons.Default.LocalFireDepartment,
+        unselectedIcon = Icons.Default.LocalFireDepartment,
+        iconTextId = RS.tab_local
+    ),
+    ComicTopLevelDestination(
+        route = ComicRoute.ROUTE_TAB_REMOTE,
+        selectedIcon = Icons.Default.WifiTethering,
+        unselectedIcon = Icons.Default.WifiTethering,
+        iconTextId = RS.tab_remote
     ),
     ComicTopLevelDestination(
         route = ComicRoute.ROUTE_TAB_PROFILE,

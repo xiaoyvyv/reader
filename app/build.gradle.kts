@@ -50,7 +50,9 @@ android {
             "-opt-in=androidx.paging.ExperimentalPagingApi",
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
-            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi"
+            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
+            "-opt-in=com.github.panpf.zoomimage.compose.glide.internal.ExperimentalGlideComposeApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
         )
     }
 
@@ -97,6 +99,8 @@ dependencies {
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation("com.github.bumptech.glide:okhttp3-integration:4.15.1")
     ksp("com.github.bumptech.glide:ksp:4.15.1")
+
+    implementation("io.github.panpf.zoomimage:zoomimage-compose-glide:1.0.2")
 
     implementation("org.jsoup:jsoup:1.17.2")
 

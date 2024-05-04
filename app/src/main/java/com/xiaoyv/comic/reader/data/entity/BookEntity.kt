@@ -2,7 +2,10 @@ package com.xiaoyv.comic.reader.data.entity
 
 import android.net.Uri
 import android.os.Parcelable
+import com.xiaoyv.comic.datasource.BookMetaData
+import com.xiaoyv.comic.datasource.BookModel
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 /**
  * [BookEntity]
@@ -15,10 +18,11 @@ data class BookEntity(
     var id: Long = 0,
     var name: String = "",
     var author: String = "",
-    var uri: Uri? = null,
     var size: Long = 0,
     var progress: Double = 0.0,
     var createAt: Long = System.currentTimeMillis(),
     var readAt: Long = 0,
-    var type: String = ""
+    var type: String = "",
+    var metaData: BookMetaData = BookMetaData(),
+    var model: @RawValue BookModel? = null,
 ) : Parcelable

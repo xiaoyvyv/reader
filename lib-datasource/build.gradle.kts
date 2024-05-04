@@ -9,6 +9,7 @@ plugins {
 android {
     namespace = "com.xiaoyv.comic.era"
     compileSdk = 34
+    ndkVersion = "25.1.8937393"
 
     defaultConfig {
         minSdk = 24
@@ -57,6 +58,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -66,6 +71,13 @@ dependencies {
     implementation(libs.material)
 
     implementation("org.jsoup:jsoup:1.17.2")
+
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.14")
+
+//    implementation("com.artifex.mupdf:mini:1.24.0a")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
