@@ -37,7 +37,7 @@ class BookInfoViewModel(
                 .map {
                     BookInfoState(
                         loadState = LoadState.NotLoading(true),
-                        bookSeriesEntity = it
+                        bookEntity = it
                     )
                 }
                 .getOrElse {

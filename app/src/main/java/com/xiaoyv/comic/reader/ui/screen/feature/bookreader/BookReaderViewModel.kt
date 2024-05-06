@@ -5,10 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
-import com.xiaoyv.comic.datasource.BookDataSource
-import com.xiaoyv.comic.datasource.BookDataSourceFactory
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.FileBookModel
+import com.xiaoyv.comic.datasource.book.BookDataSource
+import com.xiaoyv.comic.datasource.book.BookDataSourceFactory
+import com.xiaoyv.comic.datasource.book.BookModel
 import com.xiaoyv.comic.reader.data.repository.bookreader.BookReaderRepositoryImpl
 import com.xiaoyv.comic.reader.ui.utils.mutableStateFlowOf
 import kotlinx.coroutines.Dispatchers

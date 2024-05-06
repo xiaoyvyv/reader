@@ -2,9 +2,9 @@ package com.xiaoyv.comic.reader.ui.screen.main.remote.page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryConfig
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryType
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryConfig
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryType
 import com.xiaoyv.comic.reader.data.defaultPaging
 import com.xiaoyv.comic.reader.data.repository.remote.RemoteDataRepository
 import com.xiaoyv.comic.reader.data.repository.remote.RemoteDataRepositoryImpl

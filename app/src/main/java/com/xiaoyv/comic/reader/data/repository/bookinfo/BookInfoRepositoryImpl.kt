@@ -1,12 +1,9 @@
 package com.xiaoyv.comic.reader.data.repository.bookinfo
 
-import com.xiaoyv.comic.datasource.BOOK_MODEL_FILE
-import com.xiaoyv.comic.datasource.BOOK_MODEL_REMOTE
-import com.xiaoyv.comic.datasource.BookDataSourceFactory
-import com.xiaoyv.comic.datasource.BookModel
+import com.xiaoyv.comic.datasource.book.BookDataSourceFactory
+import com.xiaoyv.comic.datasource.book.BookModel
 import com.xiaoyv.comic.reader.application
 import com.xiaoyv.comic.reader.data.entity.BookEntity
-import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -18,7 +15,7 @@ import kotlinx.coroutines.withContext
  */
 class BookInfoRepositoryImpl : BookInfoRepository {
 
-    override suspend fun loadBookInfo(model: BookModel?): Result<BookSeriesEntity> {
+    override suspend fun loadBookInfo(model: BookModel?): Result<BookEntity> {
         return runCatching {
             withContext(Dispatchers.IO) {
                 val bookModel = requireNotNull(model)
@@ -26,7 +23,7 @@ class BookInfoRepositoryImpl : BookInfoRepository {
                 BookDataSourceFactory.create(application, bookModel).use {
                     it.load()
 
-                    BookSeriesEntity(
+                    BookEntity(
                         model = bookModel,
                         metaData = it.getMetaInfo(),
                         cover = it.getCover(),

@@ -72,7 +72,7 @@ std::string get_filename(dmc_unrar_archive *archive, dmc_unrar_size_t i) {
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_loadFile(JNIEnv *env, jobject thiz,
+Java_com_xiaoyv_comic_datasource_book_archive_ArchiveBookUnRar_loadFile(JNIEnv *env, jobject thiz,
                                                                         jstring file_path) {
     jboolean iscopy;
     const char *path = env->GetStringUTFChars(file_path, &iscopy);
@@ -97,7 +97,7 @@ Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_loadFile(JNIEnv *
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_free(JNIEnv *env, jobject thiz,
+Java_com_xiaoyv_comic_datasource_book_archive_ArchiveBookUnRar_free(JNIEnv *env, jobject thiz,
                                                                     jlong file_handle) {
 
     dmc_unrar_archive *arc = (dmc_unrar_archive *) file_handle;
@@ -106,7 +106,7 @@ Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_free(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_getPages(JNIEnv *env,
+Java_com_xiaoyv_comic_datasource_book_archive_ArchiveBookUnRar_getPages(JNIEnv *env,
                                                                         jobject thiz,
                                                                         jlong file_handle) {
     dmc_unrar_archive *arc = (dmc_unrar_archive *) file_handle;
@@ -151,7 +151,7 @@ Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_getPages(JNIEnv *
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_archive_ArchiveBookUnRar_extractPage(JNIEnv *env, jobject thiz,
+Java_com_xiaoyv_comic_datasource_book_archive_ArchiveBookUnRar_extractPage(JNIEnv *env, jobject thiz,
                                                                            jlong file_handle,
                                                                            jint index,
                                                                            jstring outpath) {

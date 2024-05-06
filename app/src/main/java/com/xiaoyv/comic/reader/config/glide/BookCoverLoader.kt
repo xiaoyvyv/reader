@@ -8,10 +8,10 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.signature.ObjectKey
-import com.xiaoyv.comic.datasource.BookDataSource
-import com.xiaoyv.comic.datasource.BookDataSourceFactory
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.FileBookModel
+import com.xiaoyv.comic.datasource.book.BookDataSource
+import com.xiaoyv.comic.datasource.book.BookDataSourceFactory
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.datasource.book.FileBookModel
 import com.xiaoyv.comic.datasource.utils.FileExtension.readerFileExtensions
 import com.xiaoyv.comic.reader.application
 import java.io.File

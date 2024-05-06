@@ -1,8 +1,8 @@
 package com.xiaoyv.comic.reader.data.repository.bookreader
 
-import com.xiaoyv.comic.datasource.BookDataSource
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.BookPage
+import com.xiaoyv.comic.datasource.book.BookDataSource
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.datasource.book.BookPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
  */
 class BookReaderRepositoryImpl : BookReaderRepository {
 
-    override suspend fun loadPages(dataSource: BookDataSource< BookModel>?): Result<List<BookPage<BookModel, out BookDataSource<BookModel>>>> {
+    override suspend fun loadPages(dataSource: BookDataSource<BookModel>?): Result<List<BookPage<BookModel, out BookDataSource<BookModel>>>> {
         return runCatching {
             withContext(Dispatchers.IO) {
                 val source = requireNotNull(dataSource)

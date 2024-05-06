@@ -14,8 +14,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.xiaoyv.comic.datasource.FileBookModel
-import com.xiaoyv.comic.datasource.RemoteBookModel
+import com.xiaoyv.comic.datasource.book.FileBookModel
+import com.xiaoyv.comic.datasource.book.RemoteBookModel
+import com.xiaoyv.comic.datasource.series.RemoteSeriesModel
 import com.xiaoyv.comic.reader.config.types.NavigationType
 import com.xiaoyv.comic.reader.navigation.ComicBottomNavigationBar
 import com.xiaoyv.comic.reader.navigation.ComicRoute
@@ -24,6 +25,7 @@ import com.xiaoyv.comic.reader.navigation.materialFadeThroughIn
 import com.xiaoyv.comic.reader.navigation.materialFadeThroughOut
 import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
 import com.xiaoyv.comic.reader.ui.screen.feature.bookinfo.navigateBookInfo
+import com.xiaoyv.comic.reader.ui.screen.feature.bookseries.navigateBookSeries
 import com.xiaoyv.comic.reader.ui.screen.main.home.HomeTabRoute
 import com.xiaoyv.comic.reader.ui.screen.main.local.LocalTabScreen
 import com.xiaoyv.comic.reader.ui.screen.main.profile.ProfileTabScreen
@@ -84,11 +86,11 @@ fun MainScreen(
                 composable(ComicRoute.ROUTE_TAB_REMOTE) {
                     RemoteTabRoute(
                         navigationType = navigationType,
-                        onBookClick = {
-                            navController.navigateBookInfo(
-                                model = RemoteBookModel(
+                        onSeriesClick = {
+                            navController.navigateBookSeries(
+                                model = RemoteSeriesModel(
                                     config = it.config,
-                                    bookId = it.id,
+                                    seriesId = it.id.orEmpty(),
                                 )
                             )
                         }

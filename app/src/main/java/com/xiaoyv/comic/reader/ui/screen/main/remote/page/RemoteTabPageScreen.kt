@@ -29,8 +29,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.GlideImage
-import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteSeriesInfo
+import com.xiaoyv.comic.datasource.series.SeriesInfo
 import com.xiaoyv.comic.reader.ui.component.Loading
 import com.xiaoyv.comic.reader.ui.component.PageStateScreen
 import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
@@ -45,7 +46,7 @@ import com.xiaoyv.comic.reader.ui.utils.isStoped
 @Composable
 fun RemoteTabPageRoute(
     entity: RemoteLibraryEntity,
-    onBookClick: (RemoteBookSeriesEntity) -> Unit
+    onSeriesClick: (RemoteSeriesInfo) -> Unit
 ) {
     val viewModel = viewModel<RemoteTabPageViewModel>(
         key = entity.id,
@@ -56,14 +57,14 @@ fun RemoteTabPageRoute(
 
     RemoteTabPageScreen(
         pagingItems = pagingItems,
-        onBookClick = onBookClick
+        onBookClick = onSeriesClick
     )
 }
 
 @Composable
 fun RemoteTabPageScreen(
-    pagingItems: LazyPagingItems<RemoteBookSeriesEntity>,
-    onBookClick: (RemoteBookSeriesEntity) -> Unit
+    pagingItems: LazyPagingItems<RemoteSeriesInfo>,
+    onBookClick: (RemoteSeriesInfo) -> Unit
 ) {
     val refreshState = rememberPullToRefreshState()
     if (refreshState.isRefreshing) {
@@ -147,7 +148,7 @@ fun RemoteTabPageScreen(
 
 @Composable
 fun RemoteTabPageScreenItem(
-    entity: RemoteBookSeriesEntity?,
+    entity: SeriesInfo?,
     index: Int,
     onBookClick: () -> Unit
 ) {
@@ -188,7 +189,7 @@ fun RemoteTabPageScreenItem(
             }
 
             Text(
-                text = entity?.title.orEmpty().ifEmpty { entity?.name.orEmpty() },
+                text = entity?.title.orEmpty().ifEmpty { entity?.title.orEmpty() },
                 modifier = Modifier.layoutId("tvTitle"),
                 style = MaterialTheme.typography.bodySmall
             )

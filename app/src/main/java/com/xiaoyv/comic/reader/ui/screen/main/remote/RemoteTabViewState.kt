@@ -1,7 +1,7 @@
 package com.xiaoyv.comic.reader.ui.screen.main.remote
 
 import androidx.paging.LoadState
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryEntity
 
 /**
  * [RemoteTabViewState]

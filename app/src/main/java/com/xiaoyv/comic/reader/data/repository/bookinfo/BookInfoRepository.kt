@@ -1,7 +1,7 @@
 package com.xiaoyv.comic.reader.data.repository.bookinfo
 
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.reader.data.entity.BookEntity
 
 /**
  * [BookInfoRepository]
@@ -11,5 +11,5 @@ import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
  */
 interface BookInfoRepository {
 
-    suspend fun loadBookInfo(model: BookModel?): Result<BookSeriesEntity>
+    suspend fun loadBookInfo(model: BookModel?): Result<BookEntity>
 }

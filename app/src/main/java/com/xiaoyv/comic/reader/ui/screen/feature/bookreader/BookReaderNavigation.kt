@@ -8,8 +8,8 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.BookModelHelper
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.datasource.book.BookModelHelper
 import com.xiaoyv.comic.reader.ui.utils.requireString
 
 

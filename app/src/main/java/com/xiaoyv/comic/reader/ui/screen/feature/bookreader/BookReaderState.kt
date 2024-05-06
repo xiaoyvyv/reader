@@ -1,9 +1,9 @@
 package com.xiaoyv.comic.reader.ui.screen.feature.bookreader
 
 import androidx.paging.LoadState
-import com.xiaoyv.comic.datasource.BookDataSource
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.BookPage
+import com.xiaoyv.comic.datasource.book.BookDataSource
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.datasource.book.BookPage
 
 /**
  * [BookReaderState]

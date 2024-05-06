@@ -8,13 +8,10 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.BookModelHelper
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.datasource.book.BookModelHelper
 import com.xiaoyv.comic.reader.ui.screen.feature.bookreader.navigateBookReader
 import com.xiaoyv.comic.reader.ui.utils.requireString
-import com.xiaoyv.comic.reader.ui.utils.urlDecode
-import com.xiaoyv.comic.reader.ui.utils.urlEncode
-import java.io.File
 
 
 @VisibleForTesting
@@ -38,7 +35,6 @@ fun NavController.navigateBookInfo(
 }
 
 fun NavGraphBuilder.addBookInfoScreen(navController: NavController) {
-    // 阅读页
     composable(
         route = "$ROUTE_BOOK_INFO/{$ARG_ROUTE_BOOK_INFO_MODEL}",
         arguments = listOf(navArgument(ARG_ROUTE_BOOK_INFO_MODEL) { type = NavType.StringType })

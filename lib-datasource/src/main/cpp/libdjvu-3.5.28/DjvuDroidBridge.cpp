@@ -335,7 +335,7 @@ void djvu_get_djvu_words(SearchHelper &h, jobject list, miniexp_t expr, jstring 
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDataSource_create(JNIEnv *env,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDataSource_create(JNIEnv *env,
                                                                      jobject cls) {
     ddjvu_context_t *context = ddjvu_context_create(DJVU_DROID);
     // DEBUG_PRINT("Creating context: %x", context);
@@ -343,7 +343,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDataSource_create(JNIEnv *env
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDataSource_free(JNIEnv *env,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDataSource_free(JNIEnv *env,
                                                                    jobject cls,
                                                                    jlong contextHandle) {
     ddjvu_context_t *ctx = (ddjvu_context_t *) (contextHandle);
@@ -352,7 +352,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDataSource_free(JNIEnv *env,
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_open(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_open(JNIEnv *env, jobject cls,
                                                                  jlong contextHandle,
                                                                  jstring fileName) {
     const char *fileNameString = env->GetStringUTFChars(fileName, NULL);
@@ -373,7 +373,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_open(JNIEnv *env, jo
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getPage(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_getPage(JNIEnv *env, jobject cls,
                                                                     jlong docHandle,
                                                                     jint pageNumber) {
     DEBUG_PRINT("getPage num: %d", pageNumber);
@@ -381,7 +381,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getPage(JNIEnv *env,
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getPageInfo(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_getPageInfo(JNIEnv *env, jobject cls,
                                                                         jlong docHandle,
                                                                         jint pageNumber,
                                                                         jlong contextHandle,
@@ -411,20 +411,20 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getPageInfo(JNIEnv *
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_free(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_free(JNIEnv *env, jobject cls,
                                                                  jlong docHandle) {
     ddjvu_document_release((ddjvu_document_t *) docHandle);
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getPageCount(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_getPageCount(JNIEnv *env, jobject cls,
                                                                          jlong docHandle) {
     return ddjvu_document_get_pagenum(HANDLE_TO_DOC(docHandle));
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getMeta(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_getMeta(JNIEnv *env, jobject cls,
                                                                     jlong docHandle,
                                                                     jstring jkey) {
 
@@ -440,7 +440,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getMeta(JNIEnv *env,
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getMetaKeys(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookDocument_getMetaKeys(JNIEnv *env, jobject cls,
                                                                         jlong docHandle) {
 
     miniexp_t annot = ddjvu_document_get_anno((ddjvu_document_t *) docHandle, 1);
@@ -471,7 +471,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookDocument_getMetaKeys(JNIEnv *
 
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageLinks(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_getPageLinks(JNIEnv *env, jclass cls,
                                                                      jlong docHandle,
                                                                      jint pageNumber) {
     DEBUG_PRINT("getPageLinks num: %d", pageNumber);
@@ -479,7 +479,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageLinks(JNIEnv *env
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageText(JNIEnv *jenv, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_getPageText(JNIEnv *jenv, jclass cls,
                                                                     jlong docHandle,
                                                                     jint pageNumber,
                                                                     jlong contextHandle,
@@ -514,25 +514,25 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getPageText(JNIEnv *jenv
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_isDecodingDone(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_isDecodingDone(JNIEnv *env, jclass cls,
                                                                        jlong pageHandle) {
     return ddjvu_page_decoding_done((ddjvu_page_t *) pageHandle);
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getWidth(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_getWidth(JNIEnv *env, jclass cls,
                                                                  jlong pageHangle) {
     return ddjvu_page_get_width((ddjvu_page_t *) pageHangle);
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_getHeight(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_getHeight(JNIEnv *env, jclass cls,
                                                                   jlong pageHangle) {
     return ddjvu_page_get_height((ddjvu_page_t *) pageHangle);
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPage(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_renderPage(JNIEnv *env, jclass cls,
                                                                    jlong pageHangle,
                                                                    jlong contextHandle,
                                                                    jint targetWidth,
@@ -582,7 +582,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPage(JNIEnv *env, 
 /*JNI BITMAP API*/
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPageBitmap(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_renderPageBitmap(JNIEnv *env, jclass cls,
                                                                          jlong pageHangle,
                                                                          jlong contextHandle,
                                                                          jint targetWidth,
@@ -652,14 +652,14 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_renderPageBitmap(JNIEnv 
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookPage_free(JNIEnv *env, jclass cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookPage_free(JNIEnv *env, jclass cls,
                                                              jlong pageHangle) {
     ddjvu_page_release((ddjvu_page_t *) pageHangle);
 }
 
 //Outline
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_open(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookOutline_open(JNIEnv *env, jobject cls,
                                                                 jlong docHandle) {
 //        DEBUG_PRINT("DjvuOutline.open(%p)",docHandle);
     miniexp_t outline = ddjvu_document_get_outline((ddjvu_document_t *) docHandle);
@@ -674,14 +674,14 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_open(JNIEnv *env, job
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_expConsp(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookOutline_expConsp(JNIEnv *env, jobject cls,
                                                                     jlong expr) {
 //        DEBUG_PRINT("DjvuOutline.expConsp(%p)",expr);
     return miniexp_consp((miniexp_t) expr);
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_getTitle(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookOutline_getTitle(JNIEnv *env, jobject cls,
                                                                     jlong expr) {
 //        DEBUG_PRINT("DjvuOutline.getTitle(%p)",expr);
     miniexp_t s = miniexp_car((miniexp_t) expr);
@@ -694,7 +694,7 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_getTitle(JNIEnv *env,
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_getLink(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookOutline_getLink(JNIEnv *env, jobject cls,
                                                                    jlong expr,
                                                                    jlong docHandle) {
 //        DEBUG_PRINT("DjvuOutline.getLinkPage(%p)",expr);
@@ -717,14 +717,14 @@ Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_getLink(JNIEnv *env, 
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_getNext(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookOutline_getNext(JNIEnv *env, jobject cls,
                                                                    jlong expr) {
 //    DEBUG_PRINT("DjvuOutline.getNext(%p)",expr);
     return (jlong) miniexp_cdr((miniexp_t) expr);
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_xiaoyv_comic_datasource_impl_djvu_DjvuBookOutline_getChild(JNIEnv *env, jobject cls,
+Java_com_xiaoyv_comic_datasource_book_djvu_DjvuBookOutline_getChild(JNIEnv *env, jobject cls,
                                                                     jlong expr) {
 //    DEBUG_PRINT("DjvuOutline.getChild(%p)",expr);
     miniexp_t s = miniexp_car((miniexp_t) expr);

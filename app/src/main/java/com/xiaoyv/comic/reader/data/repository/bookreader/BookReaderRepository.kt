@@ -1,8 +1,8 @@
 package com.xiaoyv.comic.reader.data.repository.bookreader
 
-import com.xiaoyv.comic.datasource.BookDataSource
-import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.datasource.BookPage
+import com.xiaoyv.comic.datasource.book.BookDataSource
+import com.xiaoyv.comic.datasource.book.BookModel
+import com.xiaoyv.comic.datasource.book.BookPage
 
 /**
  * [BookReaderRepository]

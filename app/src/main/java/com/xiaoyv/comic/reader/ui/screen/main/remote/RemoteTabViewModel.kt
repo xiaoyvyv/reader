@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryConfig
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryType
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryConfig
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryType
 import com.xiaoyv.comic.reader.data.repository.remote.RemoteDataRepository
 import com.xiaoyv.comic.reader.data.repository.remote.RemoteDataRepositoryImpl
 import com.xiaoyv.comic.reader.ui.utils.debugLog
@@ -59,7 +59,6 @@ class RemoteTabViewModel(
 
             _uiState.update { result }
         }
-
 
 
     }

@@ -36,9 +36,9 @@ import androidx.paging.LoadState
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
-import com.xiaoyv.comic.datasource.BookMetaData
+import com.xiaoyv.comic.datasource.book.BookMetaData
 import com.xiaoyv.comic.reader.R
-import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
+import com.xiaoyv.comic.reader.data.entity.BookEntity
 import com.xiaoyv.comic.reader.ui.component.ComicAppBar
 import com.xiaoyv.comic.reader.ui.component.ImageViewer
 import com.xiaoyv.comic.reader.ui.component.LocalPopupHostState
@@ -56,7 +56,7 @@ import com.xiaoyv.comic.reader.ui.utils.isNotLoading
 @Composable
 fun BookInfoRoute(
     onNavUp: () -> Unit,
-    onReadClick: (BookSeriesEntity) -> Unit
+    onReadClick: (BookEntity) -> Unit
 ) {
     val viewModel = viewModel<BookInfoViewModel>()
 
@@ -65,7 +65,7 @@ fun BookInfoRoute(
     BookInfoScreen(
         bookState = bookState,
         onNavUp = onNavUp,
-        onReadClick = { onReadClick(bookState.bookSeriesEntity) }
+        onReadClick = { onReadClick(bookState.bookEntity) }
     )
 }
 
@@ -113,11 +113,11 @@ fun BookInfoScreen(
                 // Header
                 BookInfoHeader(
                     modifier = Modifier.padding(top = padding.calculateTopPadding()),
-                    bookSeriesEntity = bookState.bookSeriesEntity,
+                    bookEntity = bookState.bookEntity,
                     onCoverClick = {
                         popupHostState.show {
                             ImageViewer(
-                                item = bookState.bookSeriesEntity.cover,
+                                item = bookState.bookEntity.cover,
                                 onImageTap = {
                                     popupHostState.hide()
                                 }
@@ -137,7 +137,7 @@ fun BookInfoScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    text = bookState.bookSeriesEntity.metaData.subject,
+                    text = bookState.bookEntity.metaData.subject,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 8,
                     overflow = TextOverflow.Ellipsis
@@ -150,7 +150,7 @@ fun BookInfoScreen(
 @Composable
 fun BookInfoHeader(
     modifier: Modifier,
-    bookSeriesEntity: BookSeriesEntity,
+    bookEntity: BookEntity,
     onCoverClick: () -> Unit
 ) {
     ConstraintLayout {
@@ -183,7 +183,7 @@ fun BookInfoHeader(
                         )
                     )
                 },
-            model = bookSeriesEntity.cover,
+            model = bookEntity.cover,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             loading = placeholder(R.drawable.ic_placeholder),
@@ -216,7 +216,7 @@ fun BookInfoHeader(
         ) {
             GlideImage(
                 modifier = Modifier.fillMaxSize(),
-                model = bookSeriesEntity.cover,
+                model = bookEntity.cover,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 transition = CrossFade
@@ -230,7 +230,7 @@ fun BookInfoHeader(
                 end.linkTo(parent.end, 12.dp)
                 width = Dimension.fillToConstraints
             },
-            text = bookSeriesEntity.metaData.title,
+            text = bookEntity.metaData.title,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             minLines = 2,
@@ -247,7 +247,7 @@ fun BookInfoHeader(
                     end.linkTo(parent.end, 12.dp)
                     width = Dimension.fillToConstraints
                 },
-            text = bookSeriesEntity.metaData.author,
+            text = bookEntity.metaData.author,
             style = MaterialTheme.typography.bodySmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -260,7 +260,7 @@ fun BookInfoHeader(
                 end.linkTo(parent.end, 12.dp)
                 width = Dimension.fillToConstraints
             },
-            text = bookSeriesEntity.metaData.format,
+            text = bookEntity.metaData.format,
             style = MaterialTheme.typography.bodySmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -278,7 +278,7 @@ fun PreviewBookInfoScreen() {
         BookInfoScreen(
             bookState = BookInfoState(
                 loadState = LoadState.NotLoading(true),
-                bookSeriesEntity = BookSeriesEntity(
+                bookEntity = BookEntity(
                     metaData = BookMetaData(
                         subject = "你好"
                     )

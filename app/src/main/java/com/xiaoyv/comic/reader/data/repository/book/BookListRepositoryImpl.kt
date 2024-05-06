@@ -1,8 +1,8 @@
 package com.xiaoyv.comic.reader.data.repository.book
 
-import com.xiaoyv.comic.datasource.FileBookModel
+import com.xiaoyv.comic.datasource.book.FileBookModel
 import com.xiaoyv.comic.reader.data.defaultPagingSource
-import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
+import com.xiaoyv.comic.reader.data.entity.BookEntity
 import kotlinx.coroutines.delay
 
 /**
@@ -13,19 +13,19 @@ import kotlinx.coroutines.delay
  */
 class BookListRepositoryImpl : BookListRepository {
     private val random = listOf(
-        BookSeriesEntity(
+        BookEntity(
             name = "我推的孩子",
             model = FileBookModel("")
         ),
-        BookSeriesEntity(
+        BookEntity(
             name = "迷宫饭",
             model = FileBookModel("")
         ),
-        BookSeriesEntity(
+        BookEntity(
             name = "一周一次买下同班同学的那些事",
             model = FileBookModel("")
         ),
-        BookSeriesEntity(
+        BookEntity(
             name = "魔都精兵的奴隶",
             model = FileBookModel("")
         )
@@ -33,7 +33,7 @@ class BookListRepositoryImpl : BookListRepository {
 
     override val pageSource
         get() = defaultPagingSource { current, size ->
-            val list = arrayListOf<BookSeriesEntity>().apply {
+            val list = arrayListOf<BookEntity>().apply {
                 repeat(size) {
                     add(random.random().copy(name = "Key: $current, Size: $size"))
                 }

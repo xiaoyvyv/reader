@@ -64,7 +64,7 @@ MOBIRawml *load_rawml(MOBIData *m) {
 }
 
 JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_mobi_MobiExtractor_convertToEpub(JNIEnv *env,
+Java_com_xiaoyv_comic_datasource_book_mobi_MobiExtractor_convertToEpub(JNIEnv *env,
                                                           __attribute__((unused)) jobject thiz,
                                                           jstring mobi_path,
                                                           jstring out_path) {
@@ -107,7 +107,7 @@ Java_com_xiaoyv_comic_datasource_impl_mobi_MobiExtractor_convertToEpub(JNIEnv *e
 }
 
 JNIEXPORT jint JNICALL
-Java_com_xiaoyv_comic_datasource_impl_mobi_MobiExtractor_extractCover(JNIEnv *env,
+Java_com_xiaoyv_comic_datasource_book_mobi_MobiExtractor_extractCover(JNIEnv *env,
                                                          __attribute__((unused)) jobject thiz,
                                                          jstring mobi_path,
                                                          jstring out_path) {

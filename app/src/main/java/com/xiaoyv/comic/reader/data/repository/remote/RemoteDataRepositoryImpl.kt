@@ -1,11 +1,11 @@
 package com.xiaoyv.comic.reader.data.repository.remote
 
 import androidx.paging.PagingSource
-import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
-import com.xiaoyv.comic.datasource.remote.RemoteLibrary
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryConfig
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryFactory
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibrary
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryConfig
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryFactory
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteSeriesInfo
 import com.xiaoyv.comic.reader.application
 import com.xiaoyv.comic.reader.data.defaultPagingSource
 import java.util.concurrent.ConcurrentHashMap
@@ -23,14 +23,14 @@ class RemoteDataRepositoryImpl : RemoteDataRepository {
     override fun getPageSource(
         config: RemoteLibraryConfig,
         libraryId: String
-    ): PagingSource<Int, RemoteBookSeriesEntity> {
+    ): PagingSource<Int, RemoteSeriesInfo> {
         return defaultPagingSource { current, size ->
             val remoteLibrary = remoteLibraryCache.getOrPut(config.type) {
                 RemoteLibraryFactory.create(application, config)
             }
 
-            val result = remoteLibrary.getLibraryBookSeries(
-                libraryId = libraryId,
+            val result = remoteLibrary.getTypeSeries(
+                typeId = libraryId,
                 page = current - 1,
                 pageSize = size
             )
@@ -44,6 +44,6 @@ class RemoteDataRepositoryImpl : RemoteDataRepository {
             RemoteLibraryFactory.create(application, config)
         }
 
-        return remoteLibrary.getLibraries()
+        return remoteLibrary.getType()
     }
 }

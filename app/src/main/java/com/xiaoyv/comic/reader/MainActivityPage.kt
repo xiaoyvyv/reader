@@ -55,6 +55,7 @@ import com.xiaoyv.comic.reader.navigation.materialSharedAxisXOut
 import com.xiaoyv.comic.reader.navigation.rememberSlideDistance
 import com.xiaoyv.comic.reader.ui.screen.feature.bookinfo.addBookInfoScreen
 import com.xiaoyv.comic.reader.ui.screen.feature.bookreader.addBookReaderScreen
+import com.xiaoyv.comic.reader.ui.screen.feature.bookseries.addBookSeriesScreen
 import com.xiaoyv.comic.reader.ui.screen.main.MainScreen
 import com.xiaoyv.comic.reader.ui.utils.DevicePosture
 import com.xiaoyv.comic.reader.ui.utils.isBookPosture
@@ -312,10 +313,13 @@ fun MainActivityPageNavHost(
             )
         }
 
+        // 书籍系列页
+        addBookSeriesScreen(navController)
+
+        // 书籍系列页下的具体书籍详情页
+        addBookInfoScreen(navController)
+
         // 阅读页面
         addBookReaderScreen(navController)
-
-        // 书籍详情页
-        addBookInfoScreen(navController)
     }
 }

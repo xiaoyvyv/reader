@@ -39,11 +39,8 @@ import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.rememberGlidePreloadingData
 import com.github.panpf.zoomimage.GlideZoomAsyncImage
-import com.xiaoyv.comic.datasource.BookPage
-import com.xiaoyv.comic.datasource.RemoteBookModel
-import com.xiaoyv.comic.datasource.impl.remote.RemotePage
-import com.xiaoyv.comic.reader.navigation.materialFadeThroughIn
-import com.xiaoyv.comic.reader.navigation.materialFadeThroughOut
+import com.xiaoyv.comic.datasource.book.BookPage
+import com.xiaoyv.comic.datasource.book.remote.RemotePage
 import com.xiaoyv.comic.reader.ui.component.ComicAppBar
 import com.xiaoyv.comic.reader.ui.component.LazyList
 import com.xiaoyv.comic.reader.ui.component.Loading
@@ -185,7 +182,7 @@ fun BookReaderPager(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Transparent),
-                model = state.pages[index],
+                model = state.pages[index].glideModel(),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 transition = com.github.panpf.zoomimage.compose.glide.internal.CrossFade,
@@ -248,7 +245,7 @@ fun BookReaderLong(
                 val imageLoadState = remember { mutableStateOf(true) }
                 GlideImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = if (data.javaClass.isAssignableFrom(RemotePage::class.java)) data.renderPageUrl() else data,
+                    model = data.glideModel(),
                     contentDescription = null,
                     transition = CrossFade,
                     requestBuilderTransform = { builder ->
@@ -275,6 +272,16 @@ fun BookReaderLong(
             }
         }
     }
+}
+
+/**
+ * 远程数据的页面直接加载图片的 Url
+ */
+private fun Any.glideModel(): Any {
+    if (this is RemotePage) {
+        return renderPageUrl()
+    }
+    return this
 }
 
 @Composable

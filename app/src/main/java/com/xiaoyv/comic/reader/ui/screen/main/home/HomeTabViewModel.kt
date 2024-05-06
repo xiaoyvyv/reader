@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.Matrix
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
-import com.xiaoyv.comic.datasource.jni.NativeLib
 import com.xiaoyv.comic.reader.ui.utils.context
 import com.xiaoyv.comic.reader.ui.utils.mutableStateFlowOf
 import kotlinx.coroutines.Dispatchers

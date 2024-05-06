@@ -23,8 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
-import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
-import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteSeriesInfo
+import com.xiaoyv.comic.datasource.series.SeriesInfo
 import com.xiaoyv.comic.reader.ui.component.ComicAppBar
 import com.xiaoyv.comic.reader.ui.component.PageStateScreen
 import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
@@ -43,21 +44,21 @@ import kotlinx.coroutines.launch
 @Composable
 fun RemoteTabRoute(
     navigationType: Int,
-    onBookClick: (RemoteBookSeriesEntity) -> Unit
+    onSeriesClick: (RemoteSeriesInfo) -> Unit
 ) {
     val viewModel = viewModel<RemoteTabViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     RemoteTabScreen(
         uiState = uiState,
-        onBookClick = onBookClick
+        onSeriesClick = onSeriesClick
     )
 }
 
 @Composable
 fun RemoteTabScreen(
     uiState: RemoteTabViewState,
-    onBookClick: (RemoteBookSeriesEntity) -> Unit
+    onSeriesClick: (RemoteSeriesInfo) -> Unit
 ) {
     ScaffoldWrap(
         topBar = {
@@ -97,7 +98,7 @@ fun RemoteTabScreen(
                             content = {
                                 RemoteTabPageRoute(
                                     entity = it,
-                                    onBookClick = onBookClick
+                                    onSeriesClick = onSeriesClick
                                 )
                             }
                         )
@@ -150,6 +151,6 @@ fun PreviewLocalTabScreen() {
                 RemoteLibraryEntity(title = "Tab3", id = "id3")
             )
         ),
-        onBookClick = {}
+        onSeriesClick = {}
     )
 }
