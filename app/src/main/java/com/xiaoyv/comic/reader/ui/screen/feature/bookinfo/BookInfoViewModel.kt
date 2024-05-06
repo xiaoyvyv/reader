@@ -37,15 +37,13 @@ class BookInfoViewModel(
                 .map {
                     BookInfoState(
                         loadState = LoadState.NotLoading(true),
-                        bookEntity = it
+                        bookSeriesEntity = it
                     )
                 }
                 .getOrElse {
                     it.printStackTrace()
 
-                    BookInfoState(
-                        loadState = LoadState.Error(it)
-                    )
+                    BookInfoState(loadState = LoadState.Error(it))
                 }
 
             _uiState.update { infoState }

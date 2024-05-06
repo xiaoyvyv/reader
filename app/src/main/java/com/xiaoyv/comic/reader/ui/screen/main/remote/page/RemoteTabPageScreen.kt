@@ -29,13 +29,11 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.GlideImage
-import com.xiaoyv.comic.datasource.remote.RemoteBookEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
-import com.xiaoyv.comic.reader.data.entity.BookEntity
 import com.xiaoyv.comic.reader.ui.component.Loading
 import com.xiaoyv.comic.reader.ui.component.PageStateScreen
 import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
-import com.xiaoyv.comic.reader.ui.screen.main.home.book.BookListScreenItem
 import com.xiaoyv.comic.reader.ui.utils.isStoped
 
 /**
@@ -45,7 +43,10 @@ import com.xiaoyv.comic.reader.ui.utils.isStoped
  * @since 5/4/24
  */
 @Composable
-fun RemoteTabPageRoute(entity: RemoteLibraryEntity) {
+fun RemoteTabPageRoute(
+    entity: RemoteLibraryEntity,
+    onBookClick: (RemoteBookSeriesEntity) -> Unit
+) {
     val viewModel = viewModel<RemoteTabPageViewModel>(
         key = entity.id,
         factory = RemoteTabPageViewModel.Factory(entity)
@@ -55,12 +56,14 @@ fun RemoteTabPageRoute(entity: RemoteLibraryEntity) {
 
     RemoteTabPageScreen(
         pagingItems = pagingItems,
+        onBookClick = onBookClick
     )
 }
 
 @Composable
 fun RemoteTabPageScreen(
-    pagingItems: LazyPagingItems<RemoteBookEntity>
+    pagingItems: LazyPagingItems<RemoteBookSeriesEntity>,
+    onBookClick: (RemoteBookSeriesEntity) -> Unit
 ) {
     val refreshState = rememberPullToRefreshState()
     if (refreshState.isRefreshing) {
@@ -89,7 +92,13 @@ fun RemoteTabPageScreen(
             ) {
                 items(count = pagingItems.itemCount) {
                     val model = pagingItems[it]
-                    RemoteTabPageScreenItem(model, it)
+                    RemoteTabPageScreenItem(
+                        entity = model,
+                        index = it,
+                        onBookClick = {
+                            if (model != null) onBookClick(model)
+                        }
+                    )
                 }
 
                 val append = pagingItems.loadState.append
@@ -138,8 +147,9 @@ fun RemoteTabPageScreen(
 
 @Composable
 fun RemoteTabPageScreenItem(
-    entity: RemoteBookEntity?,
-    index: Int
+    entity: RemoteBookSeriesEntity?,
+    index: Int,
+    onBookClick: () -> Unit
 ) {
 
     BoxWithConstraints(
@@ -167,9 +177,7 @@ fun RemoteTabPageScreenItem(
                     .layoutId("ivCover")
                     .fillMaxWidth()
                     .height(150.dp),
-                onClick = {
-
-                }
+                onClick = onBookClick
             ) {
                 GlideImage(
                     modifier = Modifier.fillMaxSize(),

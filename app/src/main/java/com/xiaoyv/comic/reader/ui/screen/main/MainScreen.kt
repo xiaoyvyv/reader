@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -16,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xiaoyv.comic.datasource.FileBookModel
+import com.xiaoyv.comic.datasource.RemoteBookModel
 import com.xiaoyv.comic.reader.config.types.NavigationType
 import com.xiaoyv.comic.reader.navigation.ComicBottomNavigationBar
 import com.xiaoyv.comic.reader.navigation.ComicRoute
@@ -83,7 +83,15 @@ fun MainScreen(
                 // 远程
                 composable(ComicRoute.ROUTE_TAB_REMOTE) {
                     RemoteTabRoute(
-                        navigationType = navigationType
+                        navigationType = navigationType,
+                        onBookClick = {
+                            navController.navigateBookInfo(
+                                model = RemoteBookModel(
+                                    config = it.config,
+                                    bookId = it.id,
+                                )
+                            )
+                        }
                     )
                 }
 

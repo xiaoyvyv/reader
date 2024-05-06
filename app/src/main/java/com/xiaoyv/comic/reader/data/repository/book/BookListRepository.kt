@@ -1,7 +1,7 @@
 package com.xiaoyv.comic.reader.data.repository.book
 
 import androidx.paging.PagingSource
-import com.xiaoyv.comic.reader.data.entity.BookEntity
+import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
 
 /**
  * [BookListRepository]
@@ -10,5 +10,5 @@ import com.xiaoyv.comic.reader.data.entity.BookEntity
  * @since 4/27/24
  */
 interface BookListRepository {
-    val pageSource: PagingSource<Int, BookEntity>
+    val pageSource: PagingSource<Int, BookSeriesEntity>
 }

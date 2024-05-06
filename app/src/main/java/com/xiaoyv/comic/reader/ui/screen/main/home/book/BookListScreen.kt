@@ -32,7 +32,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.GlideImage
 import com.xiaoyv.comic.reader.config.types.FeedType
-import com.xiaoyv.comic.reader.data.entity.BookEntity
+import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
 import com.xiaoyv.comic.reader.ui.component.Loading
 import com.xiaoyv.comic.reader.ui.component.PageStateScreen
 import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
@@ -59,7 +59,7 @@ fun BookListRoute(
 @Composable
 private fun BookListScreen(
     viewModel: BookListViewModel,
-    pagingItems: LazyPagingItems<BookEntity>
+    pagingItems: LazyPagingItems<BookSeriesEntity>
 ) {
     val listType by viewModel.listType.collectAsStateWithLifecycle()
     val refreshState = rememberPullToRefreshState()
@@ -143,7 +143,7 @@ private fun BookListScreen(
 
 @Composable
 fun BookListScreenItem(
-    entity: BookEntity?,
+    entity: BookSeriesEntity?,
 //    request: RequestBuilder<Drawable>,
     index: Int
 ) {

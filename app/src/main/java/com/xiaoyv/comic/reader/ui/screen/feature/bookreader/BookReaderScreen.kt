@@ -39,6 +39,9 @@ import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.rememberGlidePreloadingData
 import com.github.panpf.zoomimage.GlideZoomAsyncImage
+import com.xiaoyv.comic.datasource.BookPage
+import com.xiaoyv.comic.datasource.RemoteBookModel
+import com.xiaoyv.comic.datasource.impl.remote.RemotePage
 import com.xiaoyv.comic.reader.navigation.materialFadeThroughIn
 import com.xiaoyv.comic.reader.navigation.materialFadeThroughOut
 import com.xiaoyv.comic.reader.ui.component.ComicAppBar
@@ -245,7 +248,7 @@ fun BookReaderLong(
                 val imageLoadState = remember { mutableStateOf(true) }
                 GlideImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = data,
+                    model = if (data.javaClass.isAssignableFrom(RemotePage::class.java)) data.renderPageUrl() else data,
                     contentDescription = null,
                     transition = CrossFade,
                     requestBuilderTransform = { builder ->

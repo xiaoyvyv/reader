@@ -20,9 +20,12 @@ interface BookPage<T : BookModel, D : BookDataSource<T>> {
      */
     var pageRatio: Float
 
+
     fun initPageMeta(): BookPage<T, D>
 
     fun renderPage(): Bitmap
+
+    fun renderPageUrl(): String = ""
 
     fun destroy()
 }

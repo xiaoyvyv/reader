@@ -1,9 +1,7 @@
 package com.xiaoyv.comic.reader.data.repository.bookinfo
 
 import com.xiaoyv.comic.datasource.BookModel
-import com.xiaoyv.comic.reader.data.entity.BookEntity
-import kotlinx.coroutines.flow.Flow
-import java.io.File
+import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
 
 /**
  * [BookInfoRepository]
@@ -13,5 +11,5 @@ import java.io.File
  */
 interface BookInfoRepository {
 
-    suspend fun loadBookInfo(model: BookModel?): Result<BookEntity>
+    suspend fun loadBookInfo(model: BookModel?): Result<BookSeriesEntity>
 }

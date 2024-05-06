@@ -20,37 +20,22 @@ import java.io.File
 object BookDataSourceFactory {
 
     fun create(application: Application, bookModel: BookModel): BookDataSource<BookModel> {
+        var dataSource: BookDataSource<out BookModel>? = null
+
         if (bookModel is RemoteBookModel) {
-            return RemoteDataSource(application, bookModel) as BookDataSource<BookModel>
-        }
-
-        if (bookModel is FileBookModel) {
+            dataSource = RemoteDataSource(application, bookModel) as BookDataSource<BookModel>
+        } else if (bookModel is FileBookModel) {
             when (bookModel.file.extension.lowercase()) {
-                "epub" -> {
-                    return EpubBookDataSource(application, bookModel) as BookDataSource<BookModel>
-                }
-
-                "mobi" -> {
-                    return MobiBookDataSource(application, bookModel) as BookDataSource<BookModel>
-                }
-
-                "pdf" -> {
-                    return PdfBookDataSource(application, bookModel) as BookDataSource<BookModel>
-                }
-
-                "djvu" -> {
-                    return DjvuBookDataSource(application, bookModel) as BookDataSource<BookModel>
-                }
-
+                "epub" -> dataSource = EpubBookDataSource(application, bookModel)
+                "mobi" -> dataSource = MobiBookDataSource(application, bookModel)
+                "pdf" -> dataSource = PdfBookDataSource(application, bookModel)
+                "djvu" -> dataSource = DjvuBookDataSource(application, bookModel)
                 "rar", "zip", "cbr", "cbz" -> {
-                    return ArchiveBookDataSource(
-                        application,
-                        bookModel
-                    ) as BookDataSource<BookModel>
+                    dataSource = ArchiveBookDataSource(application, bookModel)
                 }
             }
         }
 
-        error("Not support! $bookModel")
+        return requireNotNull(dataSource) { "Not support! $bookModel" } as BookDataSource<BookModel>
     }
 }

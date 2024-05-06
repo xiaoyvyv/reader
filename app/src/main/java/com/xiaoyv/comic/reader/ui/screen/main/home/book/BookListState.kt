@@ -1,6 +1,6 @@
 package com.xiaoyv.comic.reader.ui.screen.main.home.book
 
-import com.xiaoyv.comic.reader.data.entity.BookEntity
+import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
 
 /**
  * [BookListState]
@@ -13,5 +13,5 @@ internal sealed interface BookListState {
 
     data object Empty : BookListState
 
-    data class BookList(val items: List<BookEntity>) : BookListState
+    data class BookList(val items: List<BookSeriesEntity>) : BookListState
 }

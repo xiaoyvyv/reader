@@ -1,15 +1,21 @@
 package com.xiaoyv.comic.datasource.remote.komga
 
 import android.content.Context
-import android.util.Base64
-import com.xiaoyv.comic.datasource.remote.RemoteBookEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookDetailEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookManifestEntity
 import com.xiaoyv.comic.datasource.remote.RemoteBookUserEntity
 import com.xiaoyv.comic.datasource.remote.RemoteLibrary
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryConfig
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteManifest
+import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteSeriesBooks
 import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteSeriesContent
 import com.xiaoyv.comic.datasource.utils.runCatchingPrint
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
 /**
@@ -54,11 +60,11 @@ class KomgaRemoteLibrary(
         }
     }
 
-    override suspend fun getLibraryBookList(
+    override suspend fun getLibraryBookSeries(
         libraryId: String,
         page: Int,
         pageSize: Int
-    ): Result<List<RemoteBookEntity>> {
+    ): Result<List<RemoteBookSeriesEntity>> {
         return withContext(Dispatchers.IO) {
             runCatchingPrint {
                 manager.komga.getSeries(
@@ -68,27 +74,90 @@ class KomgaRemoteLibrary(
                     size = pageSize
                 ).content
                     .orEmpty()
-                    .map { it.toBookEntity() }
+                    .map { it.toBookSeriesEntity() }
             }
         }
     }
 
     override suspend fun getBookDetail(
-        bookId: String,
+        seriesId: String,
         libraryId: String
-    ): Result<RemoteBookEntity> {
+    ): Result<RemoteBookSeriesEntity> {
         return withContext(Dispatchers.IO) {
             runCatchingPrint {
-                manager.komga.getBookDetail(
-                    authorization = config.basicAuthorization,
-                    bookId = bookId
-                ).toBookEntity()
+                val deferred1: Deferred<RemoteBookSeriesEntity> = async {
+                    manager.komga.getSeriesDetail(
+                        authorization = config.basicAuthorization,
+                        seriesId = seriesId
+                    ).toBookSeriesEntity()
+                }
+
+                val deferred2: Deferred<KomgaRemoteSeriesBooks> = async {
+                    manager.komga.getSeriesBooks(
+                        authorization = config.basicAuthorization,
+                        seriesId = seriesId
+                    )
+                }
+
+                val anies = awaitAll(deferred1, deferred2)
+
+                val series = anies[0] as RemoteBookSeriesEntity
+                val books = anies[1] as KomgaRemoteSeriesBooks
+
+                series.books = books.content.orEmpty().map {
+                    RemoteBookDetailEntity(
+                        config = config,
+                        id = it.id.orEmpty(),
+                        libraryId = it.libraryId.orEmpty(),
+                        seriesId = it.seriesId.orEmpty(),
+                        seriesTitle = it.seriesTitle.orEmpty(),
+                        number = it.number,
+                        sizeBytes = it.sizeBytes,
+                        type = it.media?.mediaType.orEmpty(),
+                        pageCount = it.media?.pagesCount ?: 0,
+                        status = it.media?.status.orEmpty(),
+                        title = it.metadata?.title.orEmpty(),
+                        cover = "${config.baseUrl}/api/v1/books/${it.id}/thumbnail"
+                    )
+                }
+
+                series
             }
         }
     }
 
-    private fun KomgaRemoteSeriesContent.toBookEntity(): RemoteBookEntity {
-        return RemoteBookEntity(
+    override suspend fun getBookManifest(
+        bookId: String,
+        libraryId: String
+    ): Result<RemoteBookManifestEntity> {
+        return withContext(Dispatchers.IO) {
+            runCatchingPrint {
+                val manifest = manager.komga.getBookManifest(
+                    authorization = config.basicAuthorization,
+                    bookId = bookId
+                )
+
+                RemoteBookManifestEntity(
+                    pages = manifest.readingOrder
+                        .orEmpty()
+                        .mapIndexed { index, readingOrder: KomgaRemoteManifest.ReadingOrder ->
+                            RemoteBookManifestEntity.Page(
+                                number = index,
+                                mime = readingOrder.type.orEmpty(),
+                                width = readingOrder.width,
+                                height = readingOrder.height,
+                                url = readingOrder.href.orEmpty()
+                            )
+                        }
+                )
+            }
+        }
+    }
+
+
+    private fun KomgaRemoteSeriesContent.toBookSeriesEntity(): RemoteBookSeriesEntity {
+        return RemoteBookSeriesEntity(
+            config = config,
             id = id.orEmpty(),
             libraryId = libraryId.orEmpty(),
             bookCount = booksCount,

@@ -1,9 +1,7 @@
 package com.xiaoyv.comic.reader.ui.screen.feature.bookinfo
 
 import androidx.paging.LoadState
-import com.xiaoyv.comic.datasource.FileBookModel
-import com.xiaoyv.comic.reader.data.entity.BookEntity
-import java.io.File
+import com.xiaoyv.comic.reader.data.entity.BookSeriesEntity
 
 /**
  * [BookInfoState]
@@ -13,5 +11,5 @@ import java.io.File
  */
 data class BookInfoState(
     val loadState: LoadState = LoadState.Loading,
-    val bookEntity: BookEntity = BookEntity()
+    val bookSeriesEntity: BookSeriesEntity = BookSeriesEntity()
 )

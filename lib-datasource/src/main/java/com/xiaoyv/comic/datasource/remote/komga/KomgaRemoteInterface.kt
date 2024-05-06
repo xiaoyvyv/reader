@@ -1,7 +1,9 @@
 package com.xiaoyv.comic.datasource.remote.komga
 
 import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteLibraries
+import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteManifest
 import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteSeries
+import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteSeriesBooks
 import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteSeriesContent
 import com.xiaoyv.comic.datasource.remote.komga.entity.KomgaRemoteUser
 import retrofit2.http.GET
@@ -42,9 +44,24 @@ interface KomgaRemoteInterface {
     ): KomgaRemoteUser
 
 
-    @GET("/api/v1/series/{bookId}")
-    suspend fun getBookDetail(
+    @GET("/api/v1/series/{seriesId}")
+    suspend fun getSeriesDetail(
+        @Header("Authorization") authorization: String,
+        @Path("seriesId") seriesId: String
+    ): KomgaRemoteSeriesContent
+
+    @GET("/api/v1/series/{seriesId}/books")
+    suspend fun getSeriesBooks(
+        @Header("Authorization") authorization: String,
+        @Path("seriesId") seriesId: String,
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 500,
+        @Query("sort") sort: String = "metadata.numberSort,asc"
+    ): KomgaRemoteSeriesBooks
+
+    @GET("/api/v1/books/{bookId}/manifest")
+    suspend fun getBookManifest(
         @Header("Authorization") authorization: String,
         @Path("bookId") bookId: String
-    ): KomgaRemoteSeriesContent
+    ): KomgaRemoteManifest
 }

@@ -5,8 +5,11 @@ import com.xiaoyv.comic.datasource.BookDataSource
 import com.xiaoyv.comic.datasource.BookMetaData
 import com.xiaoyv.comic.datasource.BookPage
 import com.xiaoyv.comic.datasource.RemoteBookModel
-import com.xiaoyv.comic.datasource.remote.RemoteBookEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookManifestEntity
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryFactory
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -20,14 +23,22 @@ class RemoteDataSource(
     override val model: RemoteBookModel,
 ) : BookDataSource<RemoteBookModel> {
     private val remoteLibrary = RemoteLibraryFactory.create(context, model.config)
-    private var bookDetail: RemoteBookEntity? = null
+    private var bookDetail: RemoteBookSeriesEntity? = null
+    private var bookManifest: RemoteBookManifestEntity? = null
 
     override var pageCount: Int = 0
 
     override fun load() {
         runBlocking {
-            bookDetail = remoteLibrary.getBookDetail(model.bookId, model.libraryId)
-                .getOrNull()
+            val results = awaitAll(
+                async { remoteLibrary.getBookDetail(model.bookId, model.libraryId).getOrNull() },
+                async { remoteLibrary.getBookManifest(model.bookId, model.libraryId).getOrNull() }
+            )
+
+            bookDetail = results[0] as? RemoteBookSeriesEntity
+            pageCount = bookDetail?.bookCount ?: 0
+
+            bookManifest = results[1] as? RemoteBookManifestEntity
         }
     }
 
@@ -36,7 +47,11 @@ class RemoteDataSource(
     }
 
     override fun getPage(page: Int): BookPage<RemoteBookModel, out BookDataSource<RemoteBookModel>> {
-        return RemoteDataPage(this, page)
+        return RemotePage(
+            dataSource = this,
+            page = page,
+            manifestPage = bookManifest?.pages?.getOrNull(page)
+        )
     }
 
     override fun getMetaInfo(): BookMetaData {

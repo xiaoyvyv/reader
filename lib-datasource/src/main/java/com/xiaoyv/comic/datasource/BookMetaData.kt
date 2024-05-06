@@ -22,3 +22,4 @@ data class BookMetaData(
     var creationDate: String = "",
     var modDate: String = "",
 ) : Parcelable
+

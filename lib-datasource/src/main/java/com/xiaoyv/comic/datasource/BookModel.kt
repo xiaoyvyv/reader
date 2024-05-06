@@ -5,9 +5,7 @@ import android.util.Base64
 import androidx.annotation.Keep
 import com.google.gson.Gson
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryConfig
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import okio.ByteString.Companion.decodeBase64
 import java.io.File
 
 const val BOOK_MODEL_FILE = 1
@@ -24,7 +22,6 @@ interface BookModel {
     val fileName: String
     val key: String
     val type: Int
-    val coverModel: Any?
 }
 
 object BookModelHelper {
@@ -70,9 +67,6 @@ class FileBookModel(@Keep @JvmField val filePath: String) : BookModel, Parcelabl
 
     override val key: String
         get() = file.absolutePath
-
-    override val coverModel: Any?
-        get() = file.absolutePath
 }
 
 @Keep
@@ -80,7 +74,6 @@ class FileBookModel(@Keep @JvmField val filePath: String) : BookModel, Parcelabl
 class RemoteBookModel(
     @Keep @JvmField var config: RemoteLibraryConfig,
     @Keep @JvmField var bookId: String = "",
-    @Keep @JvmField var libraryId: String = "",
 ) : BookModel, Parcelable {
     override val type: Int
         get() = BOOK_MODEL_REMOTE
@@ -90,7 +83,4 @@ class RemoteBookModel(
 
     override val key: String
         get() = bookId
-
-    override val coverModel: Any?
-        get() = ""
 }

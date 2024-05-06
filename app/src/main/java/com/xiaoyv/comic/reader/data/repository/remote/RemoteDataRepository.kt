@@ -1,7 +1,7 @@
 package com.xiaoyv.comic.reader.data.repository.remote
 
 import androidx.paging.PagingSource
-import com.xiaoyv.comic.datasource.remote.RemoteBookEntity
+import com.xiaoyv.comic.datasource.remote.RemoteBookSeriesEntity
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryConfig
 import com.xiaoyv.comic.datasource.remote.RemoteLibraryEntity
 
@@ -15,7 +15,7 @@ interface RemoteDataRepository {
     fun getPageSource(
         config: RemoteLibraryConfig,
         libraryId: String
-    ): PagingSource<Int, RemoteBookEntity>
+    ): PagingSource<Int, RemoteBookSeriesEntity>
 
     suspend fun loadTabs(config: RemoteLibraryConfig): Result<List<RemoteLibraryEntity>>
 }

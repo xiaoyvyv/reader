@@ -18,16 +18,20 @@ interface RemoteLibrary {
     suspend fun getLibraries(): Result<List<RemoteLibraryEntity>>
 
     /**
-     * 获取每个分类数据的全部分页条目
+     * 获取每个分类数据的全部分页系列条目
      */
-    suspend fun getLibraryBookList(
+    suspend fun getLibraryBookSeries(
         libraryId: String,
         page: Int,
         pageSize: Int
-    ): Result<List<RemoteBookEntity>>
+    ): Result<List<RemoteBookSeriesEntity>>
 
+    suspend fun getBookDetail(
+        seriesId: String,
+        libraryId: String
+    ): Result<RemoteBookSeriesEntity>
 
-    suspend fun getBookDetail(bookId: String, libraryId: String): Result<RemoteBookEntity>
+    suspend fun getBookManifest(bookId: String, libraryId: String): Result<RemoteBookManifestEntity>
 
     suspend fun login(): Result<RemoteBookUserEntity>
 }
