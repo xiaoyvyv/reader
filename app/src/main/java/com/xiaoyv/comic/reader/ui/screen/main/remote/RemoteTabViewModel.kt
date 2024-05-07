@@ -38,10 +38,20 @@ class RemoteTabViewModel(
     private fun refresh() {
         val config = RemoteLibraryConfig(
             type = RemoteLibraryType.TYPE_KOMGA,
+            username = "demo@komga.org",
+            password = "komga-demo",
+            baseUrl = "https://demo.komga.org"
+        )
+/*
+
+        val config = RemoteLibraryConfig(
+            type = RemoteLibraryType.TYPE_KOMGA,
             username = "2333@qq.com",
             password = "2333@qq.com",
             baseUrl = "https://manga.pilipiliultra.com"
         )
+*/
+
 
         viewModelScope.launch {
             val result = remoteDataRepository.loadTabs(config)

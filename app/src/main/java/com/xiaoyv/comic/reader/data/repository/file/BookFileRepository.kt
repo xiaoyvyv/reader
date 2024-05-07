@@ -10,5 +10,9 @@ import java.io.File
  * @since 4/27/24
  */
 interface BookFileRepository {
+
     suspend fun listFiles(dir: File): List<FileEntity>
+
+
+    suspend fun scanBooks(): Result<List<FileEntity>>
 }

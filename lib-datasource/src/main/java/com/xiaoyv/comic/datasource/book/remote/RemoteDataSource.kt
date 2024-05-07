@@ -29,7 +29,9 @@ class RemoteDataSource(
             bookDetail = remoteLibrary.getBookDetail(model.bookId, model.seriesId)
                 .getOrThrow()
 
-            pageCount = bookDetail?.pageCount ?: 0
+            pageCount = bookDetail?.pages?.size ?: 0
+
+            bookDetail?.pageCount = pageCount
         }
     }
 

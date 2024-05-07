@@ -15,6 +15,7 @@ import java.util.Date
  */
 @Parcelize
 data class RemoteLibraryEntity(
+    var config: RemoteLibraryConfig,
     var id: String = "",
     var title: String = ""
 ) : Parcelable

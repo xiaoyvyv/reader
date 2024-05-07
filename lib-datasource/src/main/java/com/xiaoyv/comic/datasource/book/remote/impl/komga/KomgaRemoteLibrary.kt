@@ -40,6 +40,7 @@ class KomgaRemoteLibrary(
             runCatchingPrint {
                 manager.komga.getLibrary(authorization = config.basicAuthorization).map {
                     RemoteLibraryEntity(
+                        config = config,
                         id = it.id.orEmpty(),
                         title = it.name.orEmpty()
                     )
@@ -173,7 +174,7 @@ class KomgaRemoteLibrary(
                     metaTitle = book.metadata?.title.orEmpty(),
                     lastModified = book.lastModified,
                     sizeBytes = book.sizeBytes,
-                    format = book.media?.mediaType.orEmpty(),
+                    format = book.media?.mediaProfile.orEmpty(),
                     pageCount = book.media?.pagesCount ?: 0,
                     status = book.media?.status.orEmpty(),
                     title = book.metadata?.title.orEmpty(),

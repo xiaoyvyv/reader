@@ -23,7 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryConfig
 import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryEntity
+import com.xiaoyv.comic.datasource.book.remote.impl.RemoteLibraryType
 import com.xiaoyv.comic.datasource.book.remote.impl.RemoteSeriesInfo
 import com.xiaoyv.comic.datasource.series.SeriesInfo
 import com.xiaoyv.comic.reader.ui.component.ComicAppBar
@@ -142,13 +144,20 @@ fun RemoteTabScreen(
 @Preview(widthDp = 411, heightDp = 700)
 @Composable
 fun PreviewLocalTabScreen() {
+    val config = RemoteLibraryConfig(
+        type = RemoteLibraryType.TYPE_KOMGA,
+        username = "XXX@qq.com",
+        password = "XXX@qq.com",
+        baseUrl = "https://manga.pilipiliultra.com"
+    )
+
     RemoteTabScreen(
         uiState = RemoteTabViewState(
             loadState = LoadState.NotLoading(true),
             tabs = listOf(
-                RemoteLibraryEntity(title = "Tab1", id = "id1"),
-                RemoteLibraryEntity(title = "Tab2", id = "id2"),
-                RemoteLibraryEntity(title = "Tab3", id = "id3")
+                RemoteLibraryEntity(title = "Tab1", id = "id1", config =config),
+                RemoteLibraryEntity(title = "Tab2", id = "id2", config =config),
+                RemoteLibraryEntity(title = "Tab3", id = "id3", config =config),
             )
         ),
         onSeriesClick = {}

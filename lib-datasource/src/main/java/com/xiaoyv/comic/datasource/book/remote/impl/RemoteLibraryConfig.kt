@@ -7,13 +7,6 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 
-private val LOCAL_FILE_FAKE_REMOTE_CONFIG = RemoteLibraryConfig(
-    type = RemoteLibraryType.TYPE_UNKNOWN,
-    baseUrl = "http://localhost",
-    username = "",
-    password = ""
-)
-
 /**
  * [RemoteLibraryConfig]
  *

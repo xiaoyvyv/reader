@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xiaoyv.comic.datasource.book.FileBookModel
-import com.xiaoyv.comic.datasource.book.RemoteBookModel
 import com.xiaoyv.comic.datasource.series.RemoteSeriesModel
 import com.xiaoyv.comic.reader.config.types.NavigationType
 import com.xiaoyv.comic.reader.navigation.ComicBottomNavigationBar
@@ -27,6 +26,7 @@ import com.xiaoyv.comic.reader.ui.component.ScaffoldWrap
 import com.xiaoyv.comic.reader.ui.screen.feature.bookinfo.navigateBookInfo
 import com.xiaoyv.comic.reader.ui.screen.feature.bookseries.navigateBookSeries
 import com.xiaoyv.comic.reader.ui.screen.main.home.HomeTabRoute
+import com.xiaoyv.comic.reader.ui.screen.main.local.LocalTabRoute
 import com.xiaoyv.comic.reader.ui.screen.main.local.LocalTabScreen
 import com.xiaoyv.comic.reader.ui.screen.main.profile.ProfileTabScreen
 import com.xiaoyv.comic.reader.ui.screen.main.remote.RemoteTabRoute
@@ -79,7 +79,12 @@ fun MainScreen(
 
                 // 本地
                 composable(ComicRoute.ROUTE_TAB_LOCAL) {
-                    LocalTabScreen()
+                    LocalTabRoute(
+                        navigationType = navigationType,
+                        onBookFileClick = {
+                            navController.navigateBookInfo(FileBookModel(it.file.absolutePath))
+                        }
+                    )
                 }
 
                 // 远程

@@ -4,6 +4,8 @@ import android.Manifest
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.PermissionChecker
+import com.xiaoyv.comic.datasource.utils.FileExtension
+import com.xiaoyv.comic.datasource.utils.runCatchingPrint
 import com.xiaoyv.comic.reader.application
 import com.xiaoyv.comic.reader.data.entity.FileEntity
 import com.xiaoyv.comic.reader.ui.utils.formatFileSize
@@ -21,8 +23,6 @@ import java.io.File
 class BookFileRepositoryImpl : BookFileRepository {
 
     override suspend fun listFiles(dir: File): List<FileEntity> {
-
-
         return withContext(Dispatchers.IO) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 check(Environment.isExternalStorageManager()) { "Permission denied!" }
@@ -63,6 +63,44 @@ class BookFileRepositoryImpl : BookFileRepository {
             )
 
             entities
+        }
+    }
+
+    override suspend fun scanBooks(): Result<List<FileEntity>> {
+        return withContext(Dispatchers.IO) {
+            runCatchingPrint {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    check(Environment.isExternalStorageManager()) { "Permission denied!" }
+                } else {
+                    check(
+                        PermissionChecker.checkSelfPermission(
+                            application,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) == PermissionChecker.PERMISSION_GRANTED
+                    ) { "Permission denied!" }
+                }
+
+                val storageDirectory = Environment.getExternalStorageDirectory()
+
+                require(storageDirectory.exists() && storageDirectory.canRead()) {
+                    "Permission denied!"
+                }
+
+                storageDirectory.walk()
+                    .filter { it.isFile && it.canRead() }
+                    .filter { FileExtension.readerFileExtensions.contains(it.extension.lowercase()) }
+                    .map {
+                        FileEntity(
+                            file = it,
+                            extension = it.extension,
+                            date = it.lastModified().formatTime("yyyy-MM-dd"),
+                            length = it.length(),
+                            lengthText = it.length().formatFileSize(),
+                            cdParent = false
+                        )
+                    }
+                    .toList()
+            }
         }
     }
 }
